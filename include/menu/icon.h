@@ -6,12 +6,10 @@
 * @Description: TODO
 */
 
-#ifndef CUPID_MENU_H
-#define CUPID_MENU_H
+#ifndef CUPID_ICON_H
+#define CUPID_ICON_H
 
-#include <string>
-
-const std::string ICON =
+const char *ICON =
         "$$$$$$$$$$$$$$$$$$$$$=+-.*$$$$$#####$$$$$$$$$$$$$$\n"
         "$$$$$$$$$$$$$$$$$$$$#*+..*$$$=+===***=****$$$$$$$$\n"
         "$$$$$$$$$$$$$$$$=+.-+===+*=-.      .. -==*=+#$$$$$\n"
@@ -28,4 +26,4 @@ const std::string ICON =
         "$$$$$$$#===#$$$$$$$$$$$#.  -*$$$$$$$$$$$$$$$$$$$$$\n"
         "$$$$$$$$$$$$$$$$$$$$$$#..+=#$$$$$$$$$$$$$$$$$$$$$$\n";
 
-#endif //CUPID_MENU_H
+#endif //CUPID_ICON_H
