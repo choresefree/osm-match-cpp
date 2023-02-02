@@ -6,9 +6,7 @@
 * @Description: TODO
 */
 
-#include "osm/tag.h"
 #include "osm/node.h"
-#include "geometry/coordinate.h"
 
 osm::Node::Node(std::string id, double lon, double lat) {
     this->id = std::move(id);
@@ -21,5 +19,4 @@ osm::Node::Node(std::string id, double lon, double lat, Tags tags) {
     this->tags = std::move(tags);
 }
 
-osm::Node::Node() {
-}
+osm::Node::Node() = default;

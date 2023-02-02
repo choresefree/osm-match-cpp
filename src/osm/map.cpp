@@ -45,8 +45,7 @@ void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only
     }
 }
 
-osm::Map::Map() {
-}
+osm::Map::Map() = default;
 
 void osm::Map::load_from_osm_offline(const std::string &file_path, bool only_highway) {
     Map map = Map();

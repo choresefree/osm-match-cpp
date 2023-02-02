@@ -9,8 +9,6 @@
 #ifndef CUPID_WAY_H
 #define CUPID_WAY_H
 
-#include <utility>
-#include <unordered_map>
 #include "node.h"
 
 namespace osm {

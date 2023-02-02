@@ -23,6 +23,4 @@ std::vector<std::string> osm::Way::get_node_ids() const {
     return this->node_ids;
 }
 
-osm::Way::Way() {
-
-}
+osm::Way::Way() = default;

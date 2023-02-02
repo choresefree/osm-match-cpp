@@ -8,6 +8,8 @@
 #ifndef CUPID_COORDINATE_H
 #define CUPID_COORDINATE_H
 
+#include <vector>
+
 class Coordinate {
 public:
     Coordinate();

@@ -5,9 +5,7 @@
 * @Data:2023/2/2 20:18
 * @Description: TODO
 */
-#include <cmath>
-#include <vector>
-#include "geometry/coordinate.h"
+
 #include "osm/node.h"
 
 const double A = 6378245.0;

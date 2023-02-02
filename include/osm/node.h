@@ -9,10 +9,7 @@
 #ifndef CUPID_NODE_H
 #define CUPID_NODE_H
 
-#include <utility>
 #include <string>
-#include <vector>
-#include <unordered_map>
 #include "tag.h"
 #include "geometry/coordinate.h"
 

@@ -9,7 +9,6 @@
 #ifndef CUPID_TRANSFORM_H
 #define CUPID_TRANSFORM_H
 
-#include "coordinate.h"
 #include "osm/node.h"
 
 bool out_of_china(double lon, double lat);

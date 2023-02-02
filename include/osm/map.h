@@ -9,10 +9,7 @@
 #ifndef CUPID_MAP_H
 #define CUPID_MAP_H
 
-
 #include "way.h"
-#include "node.h"
-#include <unordered_map>
 
 typedef std::unordered_map<std::string, std::vector<std::string>> NodeParents;
 
