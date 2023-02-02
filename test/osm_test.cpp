@@ -6,7 +6,6 @@
 * @Description: TODO
 */
 
-#include <iostream>
 #include "osm/map.h"
 #include "xml/pugixml.h"
 
