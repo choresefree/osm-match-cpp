@@ -21,15 +21,15 @@ namespace osm {
     public:
         Map();
 
-        void init_map(const WayList &ways, NodeList nodes, bool only_highway);
+        void init_map(const WayMap &ways, NodeMap nodes, bool only_highway);
 
         void load_from_osm_online();
 
-        void dump_to_xml(const std::string &file_path);
+        void dump_to_xml(const std::string &file_path) const;
 
         void load_from_osm_offline(const std::string &file_path, bool only_highway = true);
 
-        WayList load_from_amap_offline(std::string file_path);
+        WayMap load_from_amap_offline(std::string file_path);
 
         Node get_node_by_id(const std::string &node_id);
 
@@ -37,19 +37,19 @@ namespace osm {
 
         std::string add_node(Node node);
 
-        NodeIDList add_nodes(const NodeList& node);
+        NodeIDList add_nodes(const NodeMap& node);
 
         std::string add_way(const NodeIDList& node_ids, const Tags& tags);
 
-        WayList find_node_parents(const std::string& node_id);
+        WayMap find_node_parents(const std::string& node_id);
 
-        WayList get_ways() const;
+        WayMap get_ways() const;
 
-        NodeList get_nodes() const;
+        NodeMap get_nodes() const;
 
     private:
-        WayList ways;
-        NodeList nodes;
+        WayMap ways;
+        NodeMap nodes;
         NodeParents node_parents;
         int add_node_id = -1;
         int add_way_id = -1;

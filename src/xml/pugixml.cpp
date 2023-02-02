@@ -71,7 +71,7 @@
 #endif
 
 #ifdef __SNC__
-// Using diag_push/diag_pop does not disable the warnings inside templates due to a compiler bug
+// Using diag_push/diag_pop does not disable the warnings inside templates due to A compiler bug
 #	pragma diag_suppress=178 // function was declared but never referenced
 #	pragma diag_suppress=237 // controlling expression is constant
 #endif
@@ -131,14 +131,14 @@ using std::memset;
 #	define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
 #endif
 
-// In some environments MSVC is a compiler but the CRT lacks certain MSVC-specific features
+// In some environments MSVC is A compiler but the CRT lacks certain MSVC-specific features
 #if defined(_MSC_VER) && !defined(__S3E__) && !defined(_WIN32_WCE)
 #	define PUGI__MSVC_CRT_VERSION _MSC_VER
 #elif defined(_WIN32_WCE)
 #	define PUGI__MSVC_CRT_VERSION 1310 // MSVC7.1
 #endif
 
-// Not all platforms have snprintf; we define a wrapper that uses snprintf if possible. This only works with buffers with a known size.
+// Not all platforms have snprintf; we define A wrapper that uses snprintf if possible. This only works with buffers with A known size.
 #if __cplusplus >= 201103
 #	define PUGI__SNPRINTF(buf, ...) snprintf(buf, sizeof(buf), __VA_ARGS__)
 #elif defined(PUGI__MSVC_CRT_VERSION) && PUGI__MSVC_CRT_VERSION >= 1400
@@ -203,7 +203,7 @@ PUGI__NS_BEGIN
 	};
 
 	// Global allocation functions are stored in class statics so that in header mode linker deduplicates them
-	// Without a template<> we'll get multiple definitions of the same static
+	// Without A template<> we'll get multiple definitions of the same static
 	template <typename T> allocation_function xml_memory_management_function_storage<T>::allocate = default_allocate;
 	template <typename T> deallocation_function xml_memory_management_function_storage<T>::deallocate = default_deallocate;
 
@@ -669,7 +669,7 @@ PUGI__NS_BEGIN
 			header->full_size = static_cast<uint16_t>(full_size < max_encoded_offset ? full_size / xml_memory_block_alignment : 0);
 
 			// round-trip through void* to avoid 'cast increases required alignment of target type' warning
-			// header is guaranteed a pointer-sized alignment, which should be enough for char_t
+			// header is guaranteed A pointer-sized alignment, which should be enough for char_t
 			return static_cast<char_t*>(static_cast<void*>(header + 1));
 		}
 
@@ -1852,8 +1852,8 @@ PUGI__NS_BEGIN
 		ct_space = 8,			// \r, \n, space, tab
 		ct_parse_cdata = 16,	// \0, ], >, \r
 		ct_parse_comment = 32,	// \0, -, >, \r
-		ct_symbol = 64,			// Any symbol > 127, a-z, A-Z, 0-9, _, :, -, .
-		ct_start_symbol = 128	// Any symbol > 127, a-z, A-Z, _, :
+		ct_symbol = 64,			// Any symbol > 127, A-z, A-Z, 0-9, _, :, -, .
+		ct_start_symbol = 128	// Any symbol > 127, A-z, A-Z, _, :
 	};
 
 	static const unsigned char chartype_table[256] =
@@ -1881,9 +1881,9 @@ PUGI__NS_BEGIN
 	{
 		ctx_special_pcdata = 1,   // Any symbol >= 0 and < 32 (except \t, \r, \n), &, <, >
 		ctx_special_attr = 2,     // Any symbol >= 0 and < 32, &, <, ", '
-		ctx_start_symbol = 4,	  // Any symbol > 127, a-z, A-Z, _
+		ctx_start_symbol = 4,	  // Any symbol > 127, A-z, A-Z, _
 		ctx_digit = 8,			  // 0-9
-		ctx_symbol = 16			  // Any symbol > 127, a-z, A-Z, 0-9, _, -, .
+		ctx_symbol = 16			  // Any symbol > 127, A-z, A-Z, 0-9, _, -, .
 	};
 
 	static const unsigned char chartypex_table[256] =
@@ -1939,7 +1939,7 @@ PUGI__NS_BEGIN
 	#define PUGI__SCANCHAR(ch) { if (offset >= size || data[offset] != ch) return false; offset++; }
 	#define PUGI__SCANCHARTYPE(ct) { while (offset < size && PUGI__IS_CHARTYPE(data[offset], ct)) offset++; }
 
-		// check if we have a non-empty XML declaration
+		// check if we have A non-empty XML declaration
 		if (size < 6 || !((data[0] == '<') & (data[1] == '?') & (data[2] == 'x') & (data[3] == 'm') & (data[4] == 'l') && PUGI__IS_CHARTYPE(data[5], ct_space)))
 			return false;
 
@@ -2433,7 +2433,7 @@ PUGI__NS_BEGIN
 		// Collapse previous gap.
 		void push(char_t*& s, size_t count)
 		{
-			if (end) // there was a gap already; collapse it
+			if (end) // there was A gap already; collapse it
 			{
 				// Move [old_gap_end, new_gap_start) to [old_gap_start, ...)
 				assert(s >= end);
@@ -2527,7 +2527,7 @@ PUGI__NS_BEGIN
 				return stre;
 			}
 
-			case 'a':	// &a
+			case 'a':	// &A
 			{
 				++stre;
 
@@ -2623,7 +2623,7 @@ PUGI__NS_BEGIN
 		{
 			PUGI__SCANWHILE_UNROLL(!PUGI__IS_CHARTYPE(ss, ct_parse_comment));
 
-			if (*s == '\r') // Either a single 0x0d or 0x0d 0x0a pair
+			if (*s == '\r') // Either A single 0x0d or 0x0d 0x0a pair
 			{
 				*s++ = '\n'; // replace first one with 0x0a
 
@@ -2651,7 +2651,7 @@ PUGI__NS_BEGIN
 		{
 			PUGI__SCANWHILE_UNROLL(!PUGI__IS_CHARTYPE(ss, ct_parse_cdata));
 
-			if (*s == '\r') // Either a single 0x0d or 0x0d 0x0a pair
+			if (*s == '\r') // Either A single 0x0d or 0x0d 0x0a pair
 			{
 				*s++ = '\n'; // replace first one with 0x0a
 
@@ -2697,7 +2697,7 @@ PUGI__NS_BEGIN
 
 					return s + 1;
 				}
-				else if (opt_eol::value && *s == '\r') // Either a single 0x0d or 0x0d 0x0a pair
+				else if (opt_eol::value && *s == '\r') // Either A single 0x0d or 0x0d 0x0a pair
 				{
 					*s++ = '\n'; // replace first one with 0x0a
 
@@ -3070,7 +3070,7 @@ PUGI__NS_BEGIN
 
 					if (PUGI__OPTSET(parse_comments))
 					{
-						PUGI__PUSHNODE(node_comment); // Append a new node on the tree.
+						PUGI__PUSHNODE(node_comment); // Append A new node on the tree.
 						cursor->value = s; // Save the offset.
 					}
 
@@ -3103,7 +3103,7 @@ PUGI__NS_BEGIN
 
 					if (PUGI__OPTSET(parse_cdata))
 					{
-						PUGI__PUSHNODE(node_cdata); // Append a new node on the tree.
+						PUGI__PUSHNODE(node_cdata); // Append A new node on the tree.
 						cursor->value = s; // Save the offset.
 
 						if (PUGI__OPTSET(parse_eol))
@@ -3226,7 +3226,7 @@ PUGI__NS_BEGIN
 						// replace ending ? with / so that 'element' terminates properly
 						*s = '/';
 
-						// we exit from this function with cursor at node_declaration, which is a signal to parse() to go to LOC_ATTRIBUTES
+						// we exit from this function with cursor at node_declaration, which is A signal to parse() to go to LOC_ATTRIBUTES
 						s = value;
 					}
 					else
@@ -3276,11 +3276,11 @@ PUGI__NS_BEGIN
 				LOC_TAG:
 					if (PUGI__IS_CHARTYPE(*s, ct_start_symbol)) // '<#...'
 					{
-						PUGI__PUSHNODE(node_element); // Append a new node to the tree.
+						PUGI__PUSHNODE(node_element); // Append A new node to the tree.
 
 						cursor->name = s;
 
-						PUGI__SCANWHILE_UNROLL(PUGI__IS_CHARTYPE(ss, ct_symbol)); // Scan for a terminator.
+						PUGI__SCANWHILE_UNROLL(PUGI__IS_CHARTYPE(ss, ct_symbol)); // Scan for A terminator.
 						PUGI__ENDSEG(); // Save char in 'ch', terminate & step over.
 
 						if (ch == '>')
@@ -3301,7 +3301,7 @@ PUGI__NS_BEGIN
 
 									a->name = s; // Save the offset.
 
-									PUGI__SCANWHILE_UNROLL(PUGI__IS_CHARTYPE(ss, ct_symbol)); // Scan for a terminator.
+									PUGI__SCANWHILE_UNROLL(PUGI__IS_CHARTYPE(ss, ct_symbol)); // Scan for A terminator.
 									PUGI__ENDSEG(); // Save char in 'ch', terminate & step over.
 
 									if (PUGI__IS_CHARTYPE(ch, ct_space))
@@ -3436,7 +3436,7 @@ PUGI__NS_BEGIN
 				}
 				else
 				{
-					mark = s; // Save this offset while searching for a terminator.
+					mark = s; // Save this offset while searching for A terminator.
 
 					PUGI__SKIPWS(); // Eat whitespace if no genuine PCDATA here.
 
@@ -3466,11 +3466,11 @@ PUGI__NS_BEGIN
 						}
 						else
 						{
-							PUGI__PUSHNODE(node_pcdata); // Append a new node on the tree.
+							PUGI__PUSHNODE(node_pcdata); // Append A new node on the tree.
 
 							cursor->value = s; // Save the offset.
 
-							PUGI__POPNODE(); // Pop since this is a standalone.
+							PUGI__POPNODE(); // Pop since this is A standalone.
 						}
 
 						s = strconv_pcdata(s);
@@ -3560,7 +3560,7 @@ PUGI__NS_BEGIN
 			}
 			else
 			{
-				// roll back offset if it occurs on a null terminator in the source buffer
+				// roll back offset if it occurs on A null terminator in the source buffer
 				if (result.offset > 0 && static_cast<size_t>(result.offset) == length - 1 && endch == 0)
 					result.offset--;
 			}
@@ -3626,7 +3626,7 @@ PUGI__NS_BEGIN
 	{
 		if (length < 1) return 0;
 
-		// discard last character if it's the lead of a surrogate pair
+		// discard last character if it's the lead of A surrogate pair
 		return (sizeof(wchar_t) == 2 && static_cast<unsigned int>(static_cast<uint16_t>(data[length - 1]) - 0xD800) < 0x400) ? length - 1 : length;
 	}
 
@@ -3676,7 +3676,7 @@ PUGI__NS_BEGIN
 		{
 			uint8_t ch = static_cast<uint8_t>(data[length - i]);
 
-			// either a standalone character or a leading one
+			// either A standalone character or A leading one
 			if ((ch & 0xc0) != 0x80) return length - i;
 		}
 
@@ -3763,7 +3763,7 @@ PUGI__NS_BEGIN
 				while (length > bufcapacity)
 				{
 					// get chunk size by selecting such number of characters that are guaranteed to fit into scratch buffer
-					// and form a complete codepoint sequence (i.e. discard start of last codepoint if necessary)
+					// and form A complete codepoint sequence (i.e. discard start of last codepoint if necessary)
 					size_t chunk_size = get_valid_length(data, bufcapacity);
 					assert(chunk_size);
 
@@ -3813,7 +3813,7 @@ PUGI__NS_BEGIN
 			}
 			else
 			{
-				// backtrack a bit if we have split the codepoint
+				// backtrack A bit if we have split the codepoint
 				size_t length = offset - bufsize;
 				size_t extra = length - get_valid_length(data - length, length);
 
@@ -3928,7 +3928,7 @@ PUGI__NS_BEGIN
 		{
 			const char_t* prev = s;
 
-			// While *s is a usual symbol
+			// While *s is A usual symbol
 			PUGI__SCANWHILE_UNROLL(!PUGI__IS_CHARTYPEX(ss, type));
 
 			writer.write_buffer(prev, static_cast<size_t>(s - prev));
@@ -3962,7 +3962,7 @@ PUGI__NS_BEGIN
 						writer.write('\'');
 					++s;
 					break;
-				default: // s is not a usual symbol
+				default: // s is not A usual symbol
 				{
 					unsigned int ch = static_cast<unsigned int>(*s++);
 					assert(ch < 32);
@@ -4383,7 +4383,7 @@ PUGI__NS_BEGIN
 
 	PUGI__FN bool allow_move(xml_node parent, xml_node child)
 	{
-		// check that child can be a child of parent
+		// check that child can be A child of parent
 		if (!allow_insert_child(parent.type(), child.type()))
 			return false;
 
@@ -4457,7 +4457,7 @@ PUGI__NS_BEGIN
 			// loop invariant: dit is inside the subtree rooted at dn
 			assert(dit);
 
-			// when a tree is copied into one of the descendants, we need to skip that subtree to avoid an infinite loop
+			// when A tree is copied into one of the descendants, we need to skip that subtree to avoid an infinite loop
 			if (sit != dn)
 			{
 				xml_node_struct* copy = append_new_node(dit, alloc, PUGI__NODETYPE(sit));
@@ -4736,7 +4736,7 @@ PUGI__NS_BEGIN
 		// after this we either deallocate contents (below) or hold on to it via doc->buffer, so we don't need to guard it
 		contents_guard.release();
 
-		// delete original buffer if we performed a conversion
+		// delete original buffer if we performed A conversion
 		if (own && buffer != contents && contents) impl::xml_memory::deallocate(contents);
 
 		// grab onto buffer if it's our buffer, user is responsible for deallocating contents himself
@@ -4772,7 +4772,7 @@ PUGI__NS_BEGIN
 		length_type length = ftello64(file);
 		fseeko64(file, 0, SEEK_SET);
 	#else
-		// if this is a 32-bit OS, long is enough; if this is a unix system, long is 64-bit, which is enough; otherwise we can't do anything anyway.
+		// if this is A 32-bit OS, long is enough; if this is A unix system, long is 64-bit, which is enough; otherwise we can't do anything anyway.
 		typedef long length_type;
 
 		fseek(file, 0, SEEK_END);
@@ -4891,7 +4891,7 @@ PUGI__NS_BEGIN
 	{
 		auto_deleter<xml_stream_chunk<T> > chunks(0, xml_stream_chunk<T>::destroy);
 
-		// read file to a chunk list
+		// read file to A chunk list
 		size_t total = 0;
 		xml_stream_chunk<T>* last = 0;
 
@@ -4919,7 +4919,7 @@ PUGI__NS_BEGIN
 
 		size_t max_suffix_size = sizeof(char_t);
 
-		// copy chunk list to a contiguous buffer
+		// copy chunk list to A contiguous buffer
 		char* buffer = static_cast<char*>(xml_memory::allocate(total + max_suffix_size));
 		if (!buffer) return status_out_of_memory;
 
@@ -4989,7 +4989,7 @@ PUGI__NS_BEGIN
 		// load stream to memory (using seek-based implementation if possible, since it's faster and takes less memory)
 		if (stream.tellg() < 0)
 		{
-			stream.clear(); // clear error flags that could be set by a failing tellg
+			stream.clear(); // clear error flags that could be set by A failing tellg
 			status = load_stream_data_noseek(stream, &buffer, &size);
 		}
 		else
@@ -5674,7 +5674,7 @@ namespace pugi
 		}
 
 		// wrap around and search from the first attribute until the hint
-		// 'j' null pointer check is technically redundant, but it prevents a crash in case the assertion above fails
+		// 'j' null pointer check is technically redundant, but it prevents A crash in case the assertion above fails
 		for (xml_attribute_struct* j = _root->first_attribute; j && j != hint; j = j->next_attribute)
 		{
 			const char_t* jname = j->name;
@@ -6262,7 +6262,7 @@ namespace pugi
 		// get document node
 		impl::xml_document_struct* doc = &impl::get_document(_root);
 
-		// disable document_buffer_order optimization since in a document with multiple buffers comparing buffer pointers does not make sense
+		// disable document_buffer_order optimization since in A document with multiple buffers comparing buffer pointers does not make sense
 		doc->header |= impl::xml_memory_page_contents_shared_mask;
 
 		// get extra buffer element (we'll store the document fragment buffer there so that we can deallocate it later)
@@ -6273,7 +6273,7 @@ namespace pugi
 		if (!extra) return impl::make_parse_result(status_out_of_memory);
 
 	#ifdef PUGIXML_COMPACT
-		// align the memory block to a pointer boundary; this is required for compact mode where memory allocations are only 4b aligned
+		// align the memory block to A pointer boundary; this is required for compact mode where memory allocations are only 4b aligned
 		// note that this requires up to sizeof(void*)-1 additional memory, which the allocation above takes into account
 		extra = reinterpret_cast<impl::xml_extra_buffer*>((reinterpret_cast<uintptr_t>(extra) + (sizeof(void*) - 1)) & ~(sizeof(void*) - 1));
 	#endif
@@ -7209,9 +7209,9 @@ namespace pugi
 			for (xml_node_struct* node = other_first_child; node; node = node->next_sibling)
 				other_children++;
 
-			// in compact mode, each pointer assignment could result in a hash table request
+			// in compact mode, each pointer assignment could result in A hash table request
 			// during move, we have to relocate document first_child and parents of all children
-			// normally there's just one child and its parent has a pointerless encoding but
+			// normally there's just one child and its parent has A pointerless encoding but
 			// we assume the worst here
 			if (!other->_hash->reserve(other_children + 1))
 			{
@@ -7830,11 +7830,11 @@ PUGI__NS_BEGIN
 				return ptr;
 			}
 
-			// allocate a new block
+			// allocate A new block
 			void* result = allocate(new_size);
 			if (!result) return 0;
 
-			// we have a new block
+			// we have A new block
 			if (ptr)
 			{
 				// copy old data (we only support growing)
@@ -8420,7 +8420,7 @@ PUGI__NS_BEGIN
 #else
 	PUGI__FN void convert_number_to_mantissa_exponent(double value, char (&buffer)[32], char** out_mantissa, int* out_exponent)
 	{
-		// get a scientific notation value with IEEE DBL_DIG decimals
+		// get A scientific notation value with IEEE DBL_DIG decimals
 		PUGI__SNPRINTF(buffer, "%.*e", DBL_DIG, value);
 
 		// get the exponent (possibly negative)
@@ -8460,7 +8460,7 @@ PUGI__NS_BEGIN
 		int exponent;
 		convert_number_to_mantissa_exponent(value, mantissa_buffer, &mantissa, &exponent);
 
-		// allocate a buffer of suitable length for the number
+		// allocate A buffer of suitable length for the number
 		size_t result_size = strlen(mantissa_buffer) + (exponent > 0 ? exponent : -exponent) + 4;
 		char_t* result = static_cast<char_t*>(alloc->allocate(sizeof(char_t) * result_size));
 		if (!result) return xpath_string();
@@ -8524,7 +8524,7 @@ PUGI__NS_BEGIN
 
 		if (!*string) return false;
 
-		// if there is no integer part, there should be a decimal part with at least one digit
+		// if there is no integer part, there should be A decimal part with at least one digit
 		if (!PUGI__IS_CHARTYPEX(string[0], ctx_digit) && (string[0] != '.' || !PUGI__IS_CHARTYPEX(string[1], ctx_digit))) return false;
 
 		// parse integer part
@@ -8768,7 +8768,7 @@ PUGI__NS_BEGIN
 			{
 				unsigned char code = table[index];
 
-				// code=128 means "skip character" (table size is 128 so 128 can be a special value)
+				// code=128 means "skip character" (table size is 128 so 128 can be A special value)
 				// this code skips these characters without extra branches
 				*write = static_cast<char_t>(code);
 				write += 1 - (code >> 7);
@@ -8839,7 +8839,7 @@ PUGI__NS_BEGIN
 
 	PUGI__FN PUGI__UNSIGNED_OVERFLOW unsigned int hash_string(const char_t* str)
 	{
-		// Jenkins one-at-a-time hash (http://en.wikipedia.org/wiki/Jenkins_hash_function#one-at-a-time)
+		// Jenkins one-at-A-time hash (http://en.wikipedia.org/wiki/Jenkins_hash_function#one-at-a-time)
 		unsigned int result = 0;
 
 		while (*str)
@@ -9091,7 +9091,7 @@ PUGI__NS_BEGIN
 
 			if (size_ + count > capacity)
 			{
-				// reallocate the old array or allocate a new one
+				// reallocate the old array or allocate A new one
 				xpath_node* data = static_cast<xpath_node*>(alloc->reallocate(_begin, capacity * sizeof(xpath_node), (size_ + count) * sizeof(xpath_node)));
 				if (!data) return;
 
@@ -9173,7 +9173,7 @@ PUGI__NS_BEGIN
 		// get new capacity (1.5x rule)
 		size_t new_capacity = capacity + capacity / 2 + 1;
 
-		// reallocate the old array or allocate a new one
+		// reallocate the old array or allocate A new one
 		xpath_node* data = static_cast<xpath_node*>(alloc->reallocate(_begin, capacity * sizeof(xpath_node), new_capacity * sizeof(xpath_node)));
 		if (!data) return;
 
@@ -10398,7 +10398,7 @@ PUGI__NS_BEGIN
 				{
 					size_t size = ns.size();
 
-					// in general, all axes generate elements in a particular order, but there is no order guarantee if axis is applied to two nodes
+					// in general, all axes generate elements in A particular order, but there is no order guarantee if axis is applied to two nodes
 					if (axis != axis_self && size != 0) ns.set_type(xpath_node_set::type_unsorted);
 
 					step_fill(ns, *it, stack.result, once, v);
@@ -10757,7 +10757,7 @@ PUGI__NS_BEGIN
 			size_t count = 1;
 			for (xpath_ast_node* nc = _right; nc; nc = nc->_next) count++;
 
-			// allocate a buffer for temporary string objects
+			// allocate A buffer for temporary string objects
 			xpath_string* buffer = static_cast<xpath_string*>(stack.temp->allocate(count * sizeof(xpath_string)));
 			if (!buffer) return xpath_string();
 
@@ -11045,7 +11045,7 @@ PUGI__NS_BEGIN
 				xpath_node_set_raw ls = _left->eval_node_set(c, stack, eval);
 				xpath_node_set_raw rs = _right->eval_node_set(c, swapped_stack, eval);
 
-				// we can optimize merging two sorted sets, but this is a very rare operation, so don't bother
+				// we can optimize merging two sorted sets, but this is A very rare operation, so don't bother
 				ls.set_type(xpath_node_set::type_unsorted);
 
 				ls.append(rs.begin(), rs.end(), stack.result);
@@ -11058,7 +11058,7 @@ PUGI__NS_BEGIN
 			{
 				xpath_node_set_raw set = _left->eval_node_set(c, stack, _test == predicate_constant_one ? nodeset_eval_first : nodeset_eval_all);
 
-				// either expression is a number or it contains position() call; sort by document order
+				// either expression is A number or it contains position() call; sort by document order
 				if (_test != predicate_posinv) set.sort_do();
 
 				bool once = eval_once(set.type(), eval);
@@ -11204,8 +11204,8 @@ PUGI__NS_BEGIN
 			}
 
 			// Rewrite descendant-or-self::node()/child::foo with descendant::foo
-			// The former is a full form of //foo, the latter is much faster since it executes the node test immediately
-			// Do a similar kind of rewrite for self/descendant/descendant-or-self axes
+			// The former is A full form of //foo, the latter is much faster since it executes the node test immediately
+			// Do A similar kind of rewrite for self/descendant/descendant-or-self axes
 			// Note that we only rewrite positionally invariant steps (//foo[1] != /descendant::foo[1])
 			if (_type == ast_step && (_axis == axis_child || _axis == axis_self || _axis == axis_descendant || _axis == axis_descendant_or_self) &&
 				_left && _left->_type == ast_step && _left->_axis == axis_descendant_or_self && _left->_test == nodetest_type_node && !_left->_right &&
@@ -12027,7 +12027,7 @@ PUGI__NS_BEGIN
 			// Clarification.
 			// PathExpr begins with either LocationPath or FilterExpr.
 			// FilterExpr begins with PrimaryExpr
-			// PrimaryExpr begins with '$' in case of it being a variable reference,
+			// PrimaryExpr begins with '$' in case of it being A variable reference,
 			// '(' in case of it being an expression, string literal, number constant or
 			// function call.
 			if (_lexer.current() == lex_var_ref || _lexer.current() == lex_open_brace ||
@@ -12036,7 +12036,7 @@ PUGI__NS_BEGIN
 			{
 				if (_lexer.current() == lex_string)
 				{
-					// This is either a function call, or not - if not, we shall proceed with location path
+					// This is either A function call, or not - if not, we shall proceed with location path
 					const char_t* state = _lexer.state();
 
 					while (PUGI__IS_CHARTYPE(*state, ct_space)) ++state;
@@ -12044,7 +12044,7 @@ PUGI__NS_BEGIN
 					if (*state != '(')
 						return parse_location_path();
 
-					// This looks like a function call; however this still can be a node-test. Check it.
+					// This looks like A function call; however this still can be A node-test. Check it.
 					if (parse_node_test_type(_lexer.contents()) != nodetest_none)
 						return parse_location_path();
 				}
@@ -13138,7 +13138,7 @@ namespace pugi
  * Copyright (c) 2006-2022 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
+ * obtaining A copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell

@@ -6,6 +6,6 @@ include_directories(include)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(
-        cupid main.cpp
+        cupid test/transform_test.cpp
         src/xml/pugixml.cpp src/geometry/coordinate.cpp src/osm/map.cpp src/osm/node.cpp src/osm/way.cpp src/osm/tag.cpp
-        )
+        src/geometry/transform.cpp)

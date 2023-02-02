@@ -8,13 +8,25 @@
 #ifndef CUPID_COORDINATE_H
 #define CUPID_COORDINATE_H
 
+class Coordinate {
+public:
+    Coordinate();
 
-coordinate coordinate2relative(coordinate coord);
+    Coordinate(double lon, double lat);
 
-coordinates coordinates2relative(const coordinates &coords);
+    double lon{};
+    double lat{};
 
-double distance(coordinate coord1, coordinate coord2);
+};
 
-double cal_length(const std::vector<coordinate> &coords);
+typedef std::vector<Coordinate> Coordinates;
+
+Coordinate coordinate2relative(Coordinate coord);
+
+Coordinates coordinates2relative(const Coordinates &coords);
+
+double distance(Coordinate coord1, Coordinate coord2);
+
+double cal_length(const std::vector<Coordinate> &coords);
 
 #endif //CUPID_COORDINATE_H

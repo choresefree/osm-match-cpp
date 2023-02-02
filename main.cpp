@@ -17,9 +17,5 @@ using namespace std;
 using namespace osm;
 
 int main() {
-    printf("%s", ICON);
-    Map map = osm::Map();
-    map.load_from_osm_offline("/Users/xiezhenyu/CLionProjects/cupid/input.osm", true);
-    map.dump_to_xml("/Users/xiezhenyu/CLionProjects/cupid/output.osm");
     return 0;
 }

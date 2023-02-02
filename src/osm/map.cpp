@@ -8,15 +8,15 @@
 #include "osm/map.h"
 #include "xml/pugixml.h"
 
-osm::NodeList osm::Map::get_nodes() const {
+osm::NodeMap osm::Map::get_nodes() const {
     return this->nodes;
 }
 
-osm::WayList osm::Map::get_ways() const {
+osm::WayMap osm::Map::get_ways() const {
     return this->ways;
 }
 
-void osm::Map::init_map(const WayList &input_ways, NodeList input_nodes, bool only_highway = true) {
+void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
     for (auto way: input_ways) {
         bool legal_way = true;
         bool high_way = true;
@@ -57,8 +57,8 @@ void osm::Map::load_from_osm_offline(const std::string &file_path, bool only_hig
     pugi::xml_node root = doc.child("osm");
     auto xml_nodes = root.children("node");
     auto xml_ways = root.children("way");
-    NodeList map_nodes;
-    WayList map_ways;
+    NodeMap map_nodes;
+    WayMap map_ways;
     for (auto node: xml_nodes) {
         std::string node_id = node.attribute("id").value();
         double lon = std::stod(node.attribute("lon").value());
@@ -89,7 +89,7 @@ void osm::Map::load_from_osm_offline(const std::string &file_path, bool only_hig
     this->init_map(map_ways, map_nodes, only_highway);
 }
 
-void osm::Map::dump_to_xml(const std::string &file_path) {
+void osm::Map::dump_to_xml(const std::string &file_path) const {
     pugi::xml_document doc;
     pugi::xml_node declaration_node = doc.append_child(pugi::node_declaration);
     declaration_node.append_attribute("version") = "1.0";
@@ -99,7 +99,7 @@ void osm::Map::dump_to_xml(const std::string &file_path) {
     for (const auto &map_node: this->get_nodes()) {
         pugi::xml_node cur_xml_node = root.append_child("node");
         cur_xml_node.append_attribute("id") = map_node.first.c_str();
-        double lon = map_node.second.coord.first, lat = map_node.second.coord.second;
+        double lon = map_node.second.coord.lon, lat = map_node.second.coord.lat;
         cur_xml_node.append_attribute("lon") = std::to_string(lon).c_str();
         cur_xml_node.append_attribute("lat") = std::to_string(lat).c_str();
         cur_xml_node.append_attribute("version") = 1;
@@ -134,8 +134,8 @@ osm::Way osm::Map::get_way_by_id(const std::string &way_id) {
     return this->ways[way_id];
 }
 
-osm::WayList osm::Map::find_node_parents(const std::string &node_id) {
-    WayList parents;
+osm::WayMap osm::Map::find_node_parents(const std::string &node_id) {
+    WayMap parents;
     if (this->nodes.find(node_id) == this->nodes.end()) {
         return parents;
     }
@@ -151,7 +151,7 @@ std::string osm::Map::add_node(osm::Node node) {
     return node.id;
 }
 
-osm::NodeIDList osm::Map::add_nodes(const osm::NodeList& add_nodes) {
+osm::NodeIDList osm::Map::add_nodes(const osm::NodeMap& add_nodes) {
     NodeIDList added_node_ids;
     for (const auto &node: add_nodes) {
         std::string node_id = this->add_node(node.second);

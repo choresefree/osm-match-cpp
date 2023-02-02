@@ -32,7 +32,8 @@ namespace osm {
     };
 
     typedef std::vector<std::string> WayIDList;
-    typedef std::unordered_map<std::string, Way> WayList;
+    typedef std::vector<Way> WayList;
+    typedef std::unordered_map<std::string, Way> WayMap;
 }
 
 #endif //CUPID_WAY_H

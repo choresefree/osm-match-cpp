@@ -6,13 +6,13 @@
 * @Description: TODO
 */
 
-#include <utility>
 #include "osm/tag.h"
 #include "osm/node.h"
+#include "geometry/coordinate.h"
 
 osm::Node::Node(std::string id, double lon, double lat) {
     this->id = std::move(id);
-    this->coord = {lon, lat};
+    this->coord = Coordinate{lon, lat};
 }
 
 osm::Node::Node(std::string id, double lon, double lat, Tags tags) {
