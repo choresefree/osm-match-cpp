@@ -55,7 +55,7 @@ void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only
 
 osm::Map::Map() = default;
 
-void osm::Map::load_from_osm_offline(const std::string &file_path, bool only_highway) {
+void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
     Map map = Map();
     pugi::xml_document doc;
     if (!doc.load_file(file_path.c_str())) {

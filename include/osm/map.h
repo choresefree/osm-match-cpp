@@ -20,13 +20,9 @@ namespace osm {
 
         void init_map(const WayMap &ways, NodeMap nodes, bool only_highway);
 
-        void load_from_osm_online();
-
         void dump_to_xml(const std::string &file_path) const;
 
-        void load_from_osm_offline(const std::string &file_path, bool only_highway = true);
-
-        WayMap load_from_amap_offline(std::string file_path);
+        void load_from_osm(const std::string &file_path, bool only_highway = true);
 
         Node get_node_by_id(const std::string &node_id);
 

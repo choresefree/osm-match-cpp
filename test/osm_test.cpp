@@ -15,7 +15,7 @@ using namespace osm;
 
 int main() {
     Map map = osm::Map();
-    map.load_from_osm_offline("/Users/xiezhenyu/GIthubProjects/cupid/input.osm", true);
+    map.load_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/read.osm", true);
     Node node1 = Node("test1", 121.43355809975877, 31.340975601141277);
     Node node2 = Node("test1", 121.4301971, 31.3505044);
     Node node3 = Node("test2", 121.43847165767913, 31.359978913324564);
@@ -28,6 +28,6 @@ int main() {
     for (const auto &way: ways) {
         printf("parents %s\n", way.second.id.c_str());
     }
-    map.dump_to_xml("/Users/xiezhenyu/GIthubProjects/cupid/output.osm");
+    map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/test/resource/write.osm");
     return 0;
 }

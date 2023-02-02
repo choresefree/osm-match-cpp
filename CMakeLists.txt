@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.23)
+
 project(cupid)
 
 include_directories(include)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(
-        cupid test/osm_test.cpp
-        src/xml/pugixml.cpp src/geometry/coordinate.cpp src/osm/map.cpp src/osm/node.cpp src/osm/way.cpp src/osm/tag.cpp
-        src/geometry/transform.cpp)
+file(GLOB SOURCES "src/*/*.cpp")
+
+add_executable(cupid main.cpp ${SOURCES} test/json_demo.cpp)
