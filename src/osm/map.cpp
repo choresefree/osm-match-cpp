@@ -8,12 +8,20 @@
 #include "osm/map.h"
 #include "xml/pugixml.h"
 
-osm::NodeMap osm::Map::get_nodes() const {
-    return this->nodes;
+osm::NodeList osm::Map::get_nodes() const {
+    NodeList res;
+    for (const auto& node : this->nodes){
+        res.push_back(node.second);
+    }
+    return res;
 }
 
-osm::WayMap osm::Map::get_ways() const {
-    return this->ways;
+osm::WayList osm::Map::get_ways() const {
+    WayList res;
+    for (const auto& way : this->ways){
+        res.push_back(way.second);
+    }
+    return res;
 }
 
 void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
@@ -97,12 +105,12 @@ void osm::Map::dump_to_xml(const std::string &file_path) const {
     root.append_attribute("version") = "0.6";
     for (const auto &map_node: this->get_nodes()) {
         pugi::xml_node cur_xml_node = root.append_child("node");
-        cur_xml_node.append_attribute("id") = map_node.first.c_str();
-        double lon = map_node.second.coord.lon, lat = map_node.second.coord.lat;
+        cur_xml_node.append_attribute("id") = map_node.id.c_str();
+        double lon = map_node.coord.lon, lat = map_node.coord.lat;
         cur_xml_node.append_attribute("lon") = std::to_string(lon).c_str();
         cur_xml_node.append_attribute("lat") = std::to_string(lat).c_str();
         cur_xml_node.append_attribute("version") = 1;
-        for (const auto &map_node_tag: map_node.second.tags) {
+        for (const auto &map_node_tag: map_node.tags) {
             pugi::xml_node cur_xml_tag = cur_xml_node.append_child("tag");
             cur_xml_tag.append_attribute("k") = map_node_tag.first.c_str();
             cur_xml_tag.append_attribute("v") = map_node_tag.second.c_str();
@@ -110,13 +118,13 @@ void osm::Map::dump_to_xml(const std::string &file_path) const {
     }
     for (const auto &map_way: this->get_ways()) {
         pugi::xml_node cur_xml_way = root.append_child("way");
-        cur_xml_way.append_attribute("id") = map_way.first.c_str();
+        cur_xml_way.append_attribute("id") = map_way.id.c_str();
         cur_xml_way.append_attribute("version") = 1;
-        for (const auto &node_id: map_way.second.get_node_ids()) {
+        for (const auto &node_id: map_way.get_node_ids()) {
             pugi::xml_node cur_xml_node_id = cur_xml_way.append_child("nd");
             cur_xml_node_id.append_attribute("ref") = node_id.c_str();
         }
-        for (const auto &map_way_tag: map_way.second.tags) {
+        for (const auto &map_way_tag: map_way.tags) {
             pugi::xml_node cur_xml_tag = cur_xml_way.append_child("tag");
             cur_xml_tag.append_attribute("k") = map_way_tag.first.c_str();
             cur_xml_tag.append_attribute("v") = map_way_tag.second.c_str();

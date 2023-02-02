@@ -22,7 +22,7 @@ int main() {
     string id1 = map.add_node(node1);
     NodeIDList ids = map.add_nodes({{"node2", node2}, {"node3", node3}});
     printf("new node id: %s %s %s\n", id1.c_str(), ids[0].c_str(), ids[1].c_str());
-    string way_id1 = map.add_way({id1, ids[0], ids[1], map.get_nodes().begin()->first}, {{"test", "success"}});
+    string way_id1 = map.add_way({id1, ids[0], ids[1], map.get_nodes().begin()->id}, {{"test", "success"}});
     printf("new way id: %s\n", way_id1.c_str());
     auto ways = map.find_node_parents("-1");
     for (const auto &way: ways) {

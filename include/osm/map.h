@@ -40,9 +40,9 @@ namespace osm {
 
         WayMap find_node_parents(const std::string& node_id);
 
-        WayMap get_ways() const;
+        WayList get_ways() const;
 
-        NodeMap get_nodes() const;
+        NodeList get_nodes() const;
 
     private:
         WayMap ways;
