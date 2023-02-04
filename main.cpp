@@ -31,6 +31,5 @@ int main() {
 //        printf("parents %s\n", way.second.id.c_str());
 //    }
 //    map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/test/resource/online.osm");
-    printf("test");
     return 0;
 }
