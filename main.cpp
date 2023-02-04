@@ -30,6 +30,6 @@ int main() {
 //    for (const auto &way: ways) {
 //        printf("parents %s\n", way.second.id.c_str());
 //    }
-    map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/test/resource/online.osm");
+//    map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/test/resource/online.osm");
     return 0;
 }
