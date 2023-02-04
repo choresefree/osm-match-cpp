@@ -9,8 +9,6 @@
 #ifndef CUPID_WAY_H
 #define CUPID_WAY_H
 
-#include <utility>
-#include <unordered_map>
 #include "node.h"
 
 namespace osm {
@@ -24,15 +22,16 @@ namespace osm {
 
         NodeIDList get_node_ids() const;
 
-
         std::string id;
         Tags tags;
+
     private:
         NodeIDList node_ids;
     };
 
     typedef std::vector<std::string> WayIDList;
-    typedef std::unordered_map<std::string, Way> WayList;
+    typedef std::vector<Way> WayList;
+    typedef std::unordered_map<std::string, Way> WayMap;
 }
 
 #endif //CUPID_WAY_H

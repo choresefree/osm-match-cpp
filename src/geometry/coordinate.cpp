@@ -5,9 +5,9 @@
 * @Data:2023/2/1 00:29
 * @Description: TODO
 */
-#include <vector>
+
 #include <cmath>
-#include "common.h"
+#include "geometry/coordinate.h"
 
 const double REF_TO_DEGREE = 57.29577951308232;
 const double DEGREE_TO_RAD = 0.017453292519943295;
@@ -17,15 +17,24 @@ const double M = 6352352.378748541;
 const double N = 6383807.635861196;
 const double R = 5471991.159432675;
 
-coordinate coordinate2relative(const coordinate coord) {
-    double lon = (coord.first - BASE_LON) * DEGREE_TO_RAD;
-    double lat = (coord.second - BASE_LAT) * DEGREE_TO_RAD;
-    coordinate res = {lon * R, lat * M};
+
+Coordinate::Coordinate(double lon, double lat) {
+    this->lon = lon;
+    this->lat = lat;
+}
+
+Coordinate::Coordinate() = default;
+
+
+Coordinate coordinate2relative(const Coordinate coord) {
+    double lon = (coord.lon - BASE_LON) * DEGREE_TO_RAD;
+    double lat = (coord.lat - BASE_LAT) * DEGREE_TO_RAD;
+    Coordinate res = {lon * R, lat * M};
     return res;
 }
 
-coordinates coordinates2relative(const coordinates &coords) {
-    coordinates res;
+Coordinates coordinates2relative(const Coordinates &coords) {
+    Coordinates res;
     for (auto coord: coords) {
         auto relative_coord = coordinate2relative(coord);
         res.push_back(relative_coord);
@@ -33,11 +42,11 @@ coordinates coordinates2relative(const coordinates &coords) {
     return res;
 }
 
-double distance(coordinate coord1, coordinate coord2) {
-    return sqrt(pow(coord1.first - coord2.first, 2) + pow(coord1.second - coord2.second, 2));
+double distance(Coordinate coord1, Coordinate coord2) {
+    return sqrt(pow(coord1.lon - coord2.lon, 2) + pow(coord1.lat - coord2.lat, 2));
 }
 
-double cal_length(const std::vector<coordinate> &coords) {
+double cal_length(const Coordinates &coords) {
     if (coords.size() <= 1) {
         return 0;
     }

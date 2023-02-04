@@ -9,12 +9,9 @@
 #ifndef CUPID_NODE_H
 #define CUPID_NODE_H
 
-#include <utility>
 #include <string>
-#include <vector>
-#include <unordered_map>
 #include "tag.h"
-#include "common.h"
+#include "geometry/coordinate.h"
 
 namespace osm {
     class Node {
@@ -26,12 +23,13 @@ namespace osm {
         Node(std::string id, double lon, double lat, Tags tags);
 
         std::string id;
-        coordinate coord;
+        Coordinate coord;
         Tags tags;
     };
 
     typedef std::vector<std::string> NodeIDList;
-    typedef std::unordered_map<std::string, Node> NodeList;
+    typedef std::vector<Node> NodeList;
+    typedef std::unordered_map<std::string, Node> NodeMap;
 }
 
 #endif //CUPID_NODE_H

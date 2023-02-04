@@ -204,8 +204,8 @@ namespace pugi
 	// This flag determines if leading and trailing whitespace is to be removed from plain character data. This flag is off by default.
 	const unsigned int parse_trim_pcdata = 0x0800;
 
-	// This flag determines if plain character data that does not have a parent node is added to the DOM tree, and if an empty document
-	// is a valid document. This flag is off by default.
+	// This flag determines if plain character data that does not have A parent node is added to the DOM tree, and if an empty document
+	// is A valid document. This flag is off by default.
 	const unsigned int parse_fragment = 0x1000;
 
 	// This flag determines if plain character data is be stored in the parent element's value. This significantly changes the structure of
@@ -258,7 +258,7 @@ namespace pugi
 	// Open file using text mode in xml_document::save_file. This enables special character (i.e. new-line) conversions on some systems. This flag is off by default.
 	const unsigned int format_save_file_text = 0x20;
 
-	// Write every attribute on a new line with appropriate indentation. This flag is off by default.
+	// Write every attribute on A new line with appropriate indentation. This flag is off by default.
 	const unsigned int format_indent_attributes = 0x40;
 
 	// Don't output empty element tags, instead writing an explicit start and end tag even if there are no children. This flag is off by default.
@@ -271,7 +271,7 @@ namespace pugi
 	const unsigned int format_attribute_single_quote = 0x200;
 
 	// The default set of formatting flags.
-	// Nodes are indented depending on their depth in DOM tree, a default declaration is output if document has none.
+	// Nodes are indented depending on their depth in DOM tree, A default declaration is output if document has none.
 	const unsigned int format_default = format_indent;
 
 	const int default_double_precision = 17;
@@ -334,7 +334,7 @@ namespace pugi
 	class PUGIXML_CLASS xml_writer_file: public xml_writer
 	{
 	public:
-		// Construct writer from a FILE* object; void* is used to avoid header dependencies on stdio
+		// Construct writer from A FILE* object; void* is used to avoid header dependencies on stdio
 		xml_writer_file(void* file);
 
 		virtual void write(const void* data, size_t size) PUGIXML_OVERRIDE;
@@ -402,7 +402,7 @@ namespace pugi
 		// Get attribute value, or the default value if attribute is empty
 		const char_t* as_string(const char_t* def = PUGIXML_TEXT("")) const;
 
-		// Get attribute value as a number, or the default value if conversion did not succeed or attribute is empty
+		// Get attribute value as A number, or the default value if conversion did not succeed or attribute is empty
 		int as_int(int def = 0) const;
 		unsigned int as_uint(unsigned int def = 0) const;
 		double as_double(double def = 0) const;
@@ -542,7 +542,7 @@ namespace pugi
 		xml_node next_sibling(const char_t* name) const;
 		xml_node previous_sibling(const char_t* name) const;
 
-		// Get attribute, starting the search from a hint (and updating hint so that searching for a sequence of attributes is fast)
+		// Get attribute, starting the search from A hint (and updating hint so that searching for A sequence of attributes is fast)
 		xml_attribute attribute(const char_t* name, xml_attribute& hint) const;
 
 		// Get child value of current node; that is, value of the first child node of type PCDATA/CDATA
@@ -562,7 +562,7 @@ namespace pugi
 		xml_attribute insert_attribute_after(const char_t* name, const xml_attribute& attr);
 		xml_attribute insert_attribute_before(const char_t* name, const xml_attribute& attr);
 
-		// Add a copy of the specified attribute. Returns added attribute, or empty attribute on errors.
+		// Add A copy of the specified attribute. Returns added attribute, or empty attribute on errors.
 		xml_attribute append_copy(const xml_attribute& proto);
 		xml_attribute prepend_copy(const xml_attribute& proto);
 		xml_attribute insert_copy_after(const xml_attribute& proto, const xml_attribute& attr);
@@ -580,13 +580,13 @@ namespace pugi
 		xml_node insert_child_after(const char_t* name, const xml_node& node);
 		xml_node insert_child_before(const char_t* name, const xml_node& node);
 
-		// Add a copy of the specified node as a child. Returns added node, or empty node on errors.
+		// Add A copy of the specified node as A child. Returns added node, or empty node on errors.
 		xml_node append_copy(const xml_node& proto);
 		xml_node prepend_copy(const xml_node& proto);
 		xml_node insert_copy_after(const xml_node& proto, const xml_node& node);
 		xml_node insert_copy_before(const xml_node& proto, const xml_node& node);
 
-		// Move the specified node to become a child of this node. Returns moved node, or empty node on errors.
+		// Move the specified node to become A child of this node. Returns moved node, or empty node on errors.
 		xml_node append_move(const xml_node& moved);
 		xml_node prepend_move(const xml_node& moved);
 		xml_node insert_move_after(const xml_node& moved, const xml_node& node);
@@ -664,11 +664,11 @@ namespace pugi
 		xml_node find_child_by_attribute(const char_t* attr_name, const char_t* attr_value) const;
 
 	#ifndef PUGIXML_NO_STL
-		// Get the absolute node path from root as a text string.
+		// Get the absolute node path from root as A text string.
 		string_t path(char_t delimiter = '/') const;
 	#endif
 
-		// Search for a node by path consisting of node names and . or .. elements.
+		// Search for A node by path consisting of node names and . or .. elements.
 		xml_node first_element_by_path(const char_t* path, char_t delimiter = '/') const;
 
 		// Recursively traverse subtree with xml_tree_walker
@@ -689,7 +689,7 @@ namespace pugi
 
 	#endif
 
-		// Print subtree using a writer object
+		// Print subtree using A writer object
 		void print(xml_writer& writer, const char_t* indent = PUGIXML_TEXT("\t"), unsigned int flags = format_default, xml_encoding encoding = encoding_auto, unsigned int depth = 0) const;
 
 	#ifndef PUGIXML_NO_STL
@@ -715,7 +715,7 @@ namespace pugi
 		xml_object_range<xml_attribute_iterator> attributes() const;
 
 		// Range-based for support for all children with the specified name
-		// Note: name pointer must have a longer lifetime than the returned object; be careful with passing temporaries!
+		// Note: name pointer must have A longer lifetime than the returned object; be careful with passing temporaries!
 		xml_object_range<xml_named_node_iterator> children(const char_t* name) const;
 
 		// Get node offset in parsed file/string (in char_t units) for debugging purposes
@@ -767,7 +767,7 @@ namespace pugi
 		// Get text, or the default value if object is empty
 		const char_t* as_string(const char_t* def = PUGIXML_TEXT("")) const;
 
-		// Get text as a number, or the default value if conversion did not succeed or object is empty
+		// Get text as A number, or the default value if conversion did not succeed or object is empty
 		int as_int(int def = 0) const;
 		unsigned int as_uint(unsigned int def = 0) const;
 		double as_double(double def = 0) const;
@@ -826,7 +826,7 @@ namespace pugi
 	bool PUGIXML_FUNCTION operator||(const xml_text& lhs, bool rhs);
 #endif
 
-	// Child node iterator (a bidirectional iterator over a collection of xml_node)
+	// Child node iterator (A bidirectional iterator over A collection of xml_node)
 	class PUGIXML_CLASS xml_node_iterator
 	{
 		friend class xml_node;
@@ -868,7 +868,7 @@ namespace pugi
 		xml_node_iterator operator--(int);
 	};
 
-	// Attribute iterator (a bidirectional iterator over a collection of xml_attribute)
+	// Attribute iterator (A bidirectional iterator over A collection of xml_attribute)
 	class PUGIXML_CLASS xml_attribute_iterator
 	{
 		friend class xml_node;
@@ -930,7 +930,7 @@ namespace pugi
 		xml_named_node_iterator();
 
 		// Construct an iterator which points to the specified node
-		// Note: name pointer is stored in the iterator and must have a longer lifetime than iterator itself
+		// Note: name pointer is stored in the iterator and must have A longer lifetime than iterator itself
 		xml_named_node_iterator(const xml_node& node, const char_t* name);
 
 		// Iterator operators
@@ -1000,11 +1000,11 @@ namespace pugi
 		status_bad_start_element,	// Parsing error occurred while parsing start element tag
 		status_bad_attribute,		// Parsing error occurred while parsing element attribute
 		status_bad_end_element,		// Parsing error occurred while parsing end element tag
-		status_end_element_mismatch,// There was a mismatch of start-end tags (closing tag had incorrect name, some tag was not closed or there was an excessive closing tag)
+		status_end_element_mismatch,// There was A mismatch of start-end tags (closing tag had incorrect name, some tag was not closed or there was an excessive closing tag)
 
 		status_append_invalid_root,	// Unable to append nodes since root type is not node_element or node_document (exclusive to xml_node::append_buffer)
 
-		status_no_document_element	// Parsing resulted in a document without element nodes
+		status_no_document_element	// Parsing resulted in A document without element nodes
 	};
 
 	// Parsing result
@@ -1202,7 +1202,7 @@ namespace pugi
 		xpath_variable_set& operator=(xpath_variable_set&& rhs) PUGIXML_NOEXCEPT;
 	#endif
 
-		// Add a new variable or get the existing one, if the types match
+		// Add A new variable or get the existing one, if the types match
 		xpath_variable* add(const char_t* name, xpath_value_type type);
 
 		// Set value of an existing variable; no type conversion is performed, false is returned if there is no such variable or if types mismatch
@@ -1230,7 +1230,7 @@ namespace pugi
 		xpath_query& operator=(const xpath_query&);
 
 	public:
-		// Construct a compiled object from XPath expression.
+		// Construct A compiled object from XPath expression.
 		// If PUGIXML_NO_EXCEPTIONS is not defined, throws xpath_exception on compilation errors.
 		explicit xpath_query(const char_t* query, xpath_variable_set* variables = PUGIXML_NULL);
 
@@ -1293,7 +1293,7 @@ namespace pugi
 	#ifndef PUGIXML_NO_EXCEPTIONS
         #if defined(_MSC_VER)
           // C4275 can be ignored in Visual C++ if you are deriving
-          // from a type in the Standard C++ Library
+          // from A type in the Standard C++ Library
           #pragma warning(push)
           #pragma warning(disable: 4275)
         #endif
@@ -1380,7 +1380,7 @@ namespace pugi
 		// Default constructor. Constructs empty set.
 		xpath_node_set();
 
-		// Constructs a set from iterator range; data is not checked for duplicates and is not sorted according to provided type, so be careful
+		// Constructs A set from iterator range; data is not checked for duplicates and is not sorted according to provided type, so be careful
 		xpath_node_set(const_iterator begin, const_iterator end, type_t type = type_unsorted);
 
 		// Destructor
@@ -1488,7 +1488,7 @@ namespace std
  * Copyright (c) 2006-2022 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
+ * obtaining A copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell
