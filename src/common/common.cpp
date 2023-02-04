@@ -7,11 +7,17 @@
 */
 # include "common/common.h"
 
-bool dump_json(const Json::Value& json, const std::string& file_path) {
-    std::string str_json = json.toStyledString();
+bool dump_file(const std::string& content, const std::string& file_path){
     std::fstream ifs;
     ifs.open(file_path, std::ios::out);
-    ifs << json;
+    ifs << content;
+    return true;
+}
+
+
+bool dump_json(const Json::Value& json, const std::string& file_path) {
+    std::string str_json = json.toStyledString();
+    dump_file(str_json, file_path);
     return true;
 }
 
@@ -20,7 +26,7 @@ bool load_json(Json::Value& json, const std::string& file_path){
     ifs.open(file_path, std::ios::in);
     if (!ifs.is_open())
     {
-        printf("文件打开失败\n");
+        printf("fail to open file\n");
         return false;
     }
     std::string content;

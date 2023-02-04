@@ -7,6 +7,10 @@
 */
 
 #include "osm/way.h"
+#include "json/json.h"
+#include "common/common.h"
+
+osm::Way::Way() = default;
 
 osm::Way::Way(std::string id, osm::NodeIDList node_ids) {
     this->id = std::move(id);
@@ -22,5 +26,3 @@ osm::Way::Way(std::string id, osm::NodeIDList node_ids, Tags tags) {
 std::vector<std::string> osm::Way::get_node_ids() const {
     return this->node_ids;
 }
-
-osm::Way::Way() = default;

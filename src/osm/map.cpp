@@ -5,12 +5,20 @@
 * @Data:2023/1/31 10:54
 * @Description: TODO
 */
+
+#include <cstdio>
 #include "osm/map.h"
 #include "xml/pugixml.h"
+#include "http/httplib.h"
+#include "common/common.h"
+
+const char *DOWNLOAD_OSM_PATH = "/api/map?bbox=%f,%f,%f,%f";
+const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
+const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
 
 osm::NodeList osm::Map::get_nodes() const {
     NodeList res;
-    for (const auto& node : this->nodes){
+    for (const auto &node: this->nodes) {
         res.push_back(node.second);
     }
     return res;
@@ -18,7 +26,7 @@ osm::NodeList osm::Map::get_nodes() const {
 
 osm::WayList osm::Map::get_ways() const {
     WayList res;
-    for (const auto& way : this->ways){
+    for (const auto &way: this->ways) {
         res.push_back(way.second);
     }
     return res;
@@ -26,7 +34,6 @@ osm::WayList osm::Map::get_ways() const {
 
 void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
     for (auto way: input_ways) {
-        bool legal_way = true;
         bool high_way = true;
         if (way.second.tags.find("highway") == way.second.tags.end()) {
             high_way = false;
@@ -38,17 +45,14 @@ void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only
         for (const auto &node_id: way.second.get_node_ids()) {
             if (input_nodes.find(node_id) == input_nodes.end()) {
                 printf("node%s in way%s does not exist in input nodes\n", node_id.c_str(), way.first.c_str());
-                legal_way = false;
-                break;
+                continue;
             }
             cur_way_node_ids.push_back(node_id);
         }
-        if (legal_way) {
-            this->ways.insert(way);
-            for (const auto &node_id: cur_way_node_ids) {
-                this->nodes[node_id] = input_nodes[node_id];
-                this->node_parents[node_id].push_back(way.second.id);
-            }
+        this->ways.insert(way);
+        for (const auto &node_id: cur_way_node_ids) {
+            this->nodes[node_id] = input_nodes[node_id];
+            this->node_parents[node_id].push_back(way.second.id);
         }
     }
 }
@@ -67,33 +71,62 @@ void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
     NodeMap map_nodes;
     WayMap map_ways;
     for (auto node: xml_nodes) {
-        std::string node_id = node.attribute("id").value();
-        double lon = std::stod(node.attribute("lon").value());
-        double lat = std::stod(node.attribute("lat").value());
+        std::string node_id = node.attribute("id").as_string();
+        double lon = node.attribute("lon").as_double();
+        double lat = node.attribute("lat").as_double();
+        if (lon == 0 || lat == 0) {
+            continue;
+        }
         auto node_tags = node.children("tag");
         Tags map_node_tags;
         for (auto tag: node_tags) {
-            map_node_tags[tag.attribute("k").value()] = tag.attribute("v").value();
+            map_node_tags[tag.attribute("k").as_string()] = tag.attribute("v").as_string();
         }
         Node map_node = Node(node_id, lon, lat, map_node_tags);
         map_nodes[node_id] = map_node;
     }
     for (auto way: xml_ways) {
-        std::string way_id = way.attribute("id").value();
+        std::string way_id = way.attribute("id").as_string();
         auto way_nodes = way.children("nd");
         NodeIDList map_way_node_ids;
         for (auto node_id: way_nodes) {
-            map_way_node_ids.push_back(node_id.attribute("ref").value());
+            std::string cur_node_id = node_id.attribute("ref").as_string();
+            if (map_nodes.find(cur_node_id) == map_nodes.end()) {
+                continue;
+            }
+            map_way_node_ids.push_back(node_id.attribute("ref").as_string());
         }
         auto way_tags = way.children("tag");
         Tags map_way_tags;
         for (auto tag: way_tags) {
-            map_way_tags[tag.attribute("k").value()] = tag.attribute("v").value();
+            map_way_tags[tag.attribute("k").as_string()] = tag.attribute("v").as_string();
         }
         Way map_way = Way(way_id, map_way_node_ids, map_way_tags);
         map_ways[way_id] = map_way;
     }
     this->init_map(map_ways, map_nodes, only_highway);
+}
+
+void osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
+    char *path = new char[0];
+    sprintf(path, DOWNLOAD_OSM_PATH, min_lon, min_lat, max_lon, max_lat);
+    printf("down load osm from %s%s\n", DOWNLOAD_OSM_URL.c_str(), path);
+    const std::string path_string = path;
+    httplib::Client cli(DOWNLOAD_OSM_URL);
+    if (auto res = cli.Get(path_string)) {
+        if (res->status == 200) {
+            dump_file(res->body, OSM_CACHE_DIR + "http.osm");
+        } else {
+            printf("http status exception: %d\n", res->status);
+            return;
+        }
+    } else {
+        auto err = res.error();
+        printf("http error: %s\n", httplib::to_string(err).c_str());
+        return;
+    }
+    this->load_from_osm(OSM_CACHE_DIR + "http.osm", only_highway);
+//    remove((OSM_CACHE_DIR + "http.osm").c_str());
 }
 
 void osm::Map::dump_to_xml(const std::string &file_path) const {
@@ -158,7 +191,7 @@ std::string osm::Map::add_node(osm::Node node) {
     return node.id;
 }
 
-osm::NodeIDList osm::Map::add_nodes(const osm::NodeMap& add_nodes) {
+osm::NodeIDList osm::Map::add_nodes(const osm::NodeMap &add_nodes) {
     NodeIDList added_node_ids;
     for (const auto &node: add_nodes) {
         std::string node_id = this->add_node(node.second);
@@ -167,9 +200,9 @@ osm::NodeIDList osm::Map::add_nodes(const osm::NodeMap& add_nodes) {
     return added_node_ids;
 }
 
-std::string osm::Map::add_way(const osm::NodeIDList& node_ids, const osm::Tags& tags) {
+std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const osm::Tags &tags) {
     NodeIDList legal_node_ids;
-    for (const auto& node_id: node_ids) {
+    for (const auto &node_id: node_ids) {
         if (this->nodes.find(node_id) == this->nodes.end()) {
             continue;
         }

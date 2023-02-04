@@ -22,7 +22,9 @@ namespace osm {
 
         void dump_to_xml(const std::string &file_path) const;
 
-        void load_from_osm(const std::string &file_path, bool only_highway = true);
+        void load_from_osm(const std::string &file_path, bool only_highway = false);
+
+        void load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway = false);
 
         Node get_node_by_id(const std::string &node_id);
 
@@ -30,11 +32,11 @@ namespace osm {
 
         std::string add_node(Node node);
 
-        NodeIDList add_nodes(const NodeMap& node);
+        NodeIDList add_nodes(const NodeMap &add_nodes);
 
-        std::string add_way(const NodeIDList& node_ids, const Tags& tags);
+        std::string add_way(const NodeIDList &node_ids, const Tags &tags);
 
-        WayMap find_node_parents(const std::string& node_id);
+        WayMap find_node_parents(const std::string &node_id);
 
         WayList get_ways() const;
 
