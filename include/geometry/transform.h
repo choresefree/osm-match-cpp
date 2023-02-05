@@ -17,16 +17,20 @@ double translate_lon(double lon, double lat);
 
 double translate_lat(double lon, double lat);
 
-Coordinate wgs2gcj(Coordinate wgs_coord);
+Coordinate wgs2gcj(const Coordinate &wgs_coord);
 
-Coordinate gcj2wgs(Coordinate gcj_coord);
+Coordinate gcj2wgs(const Coordinate &gcj_coord);
 
 Coordinates batch_wgs2gcj(const Coordinates &wgs_coords);
 
 Coordinates batch_gcj2wgs(const Coordinates &gcj_coords);
 
-Point coordinate2relative(Coordinate coord);
+Point coordinate2relative(const Coordinate &coord);
 
-Points coordinates2relative(const Coordinates &coords);
+Points batch_coordinate2relative(const Coordinates &coords);
+
+Coordinate relative2coordinate(const Point & point);
+
+Coordinates batch_relative2coordinate(const Points & points);
 
 #endif //CUPID_TRANSFORM_H

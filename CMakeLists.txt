@@ -8,4 +8,4 @@ set(CMAKE_CXX_STANDARD 14)
 
 file(GLOB SOURCES "src/*/*.cpp")
 
-add_executable(cupid test/transform_test.cpp ${SOURCES})
+add_executable(cupid test/polygon_test.cpp ${SOURCES})

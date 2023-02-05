@@ -12,7 +12,7 @@
 
 const double A = 6378245.0;
 const double E = 0.00669342162296594323;
-const double REF_TO_DEGREE = 57.29577951308232;
+const double RAD_TO_DEGREE = 57.29577951308232;
 const double DEGREE_TO_RAD = 0.017453292519943295;
 const double BASE_LON = 120;
 const double BASE_LAT = 30;
@@ -40,7 +40,7 @@ double translate_lat(double lon, double lat) {
     return ret;
 }
 
-Coordinate gcj2wgs(Coordinate gcj_coord) {
+Coordinate gcj2wgs(const Coordinate &gcj_coord) {
     auto gcj_lon = gcj_coord.lon, gcj_lat = gcj_coord.lat;
     Coordinate wgs_coord;
     if (in_china(gcj_lon, gcj_lat)) {
@@ -62,7 +62,7 @@ Coordinate gcj2wgs(Coordinate gcj_coord) {
     }
 }
 
-Coordinate wgs2gcj(Coordinate wgs_coord) {
+Coordinate wgs2gcj(const Coordinate &wgs_coord) {
     auto wgs_lon = wgs_coord.lon, wgs_lat = wgs_coord.lat;
     Coordinate gcj_pos;
     if (in_china(wgs_lon, wgs_lat)) {
@@ -100,18 +100,35 @@ Coordinates batch_gcj2wgs(const Coordinates &gcj_coords) {
     return res;
 }
 
-Point coordinate2relative(const Coordinate coord) {
+Point coordinate2relative(const Coordinate &coord) {
     double lon = (coord.lon - BASE_LON) * DEGREE_TO_RAD;
     double lat = (coord.lat - BASE_LAT) * DEGREE_TO_RAD;
     Point res = {lon * R, lat * M};
     return res;
 }
 
-Points coordinates2relative(const Coordinates &coords) {
+Points batch_coordinate2relative(const Coordinates &coords) {
     Points res;
     for (auto coord: coords) {
-        auto relative_coord = coordinate2relative(coord);
-        res.push_back(relative_coord);
+        auto relative = coordinate2relative(coord);
+        res.push_back(relative);
+    }
+    return res;
+}
+
+Coordinate relative2coordinate(const Point &point) {
+    double lon = BASE_LON + point.x / R * RAD_TO_DEGREE;
+    double lat = BASE_LAT + point.y / M * RAD_TO_DEGREE;
+    Coordinate res = Coordinate(lon, lat);
+    return res;
+
+}
+
+Coordinates batch_relative2coordinate(const Points &points) {
+    Coordinates res;
+    for (auto point: points) {
+        auto coord = relative2coordinate(point);
+        res.push_back(coord);
     }
     return res;
 }

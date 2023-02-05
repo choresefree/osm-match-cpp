@@ -13,21 +13,34 @@
 
 class Point {
 public:
+    Point();
+
     Point(double x, double y);
 
-    double distance(Point point);
-
-    double x;
-    double y;
+    double x{};
+    double y{};
 };
 
 typedef std::vector<Point> Points;
 
+class Segment {
+public:
+    Segment();
+
+    Segment(Point point1, Point point2);
+
+    Point point1;
+    Point point2;
+};
+
+
 class Line {
 public:
-    explicit Line(std::vector<Point> points);
+    Line();
 
-    std::vector<Point> points;
+    Line(std::vector<Point> points);
+
+    Points points;
 };
 
 class Coordinate {
@@ -45,19 +58,28 @@ typedef std::vector<Coordinate> Coordinates;
 
 double cal_length(const Points &points);
 
+Point pedal(Point point, Segment segment);
+
 double distance(Point point1, Point point2);
+
+double distance(Point point, Segment segment);
 
 double distance(Point point, Line line);
 
-double distance(Line line1, Line line2);
+double angle(Segment seg1, Segment seg2);
 
-bool is_intersect(Line line1, Line line2);
+bool intersect(Segment seg1, Segment seg2);
 
-bool is_vertical(Line line1, Line line2);
+bool vertical(Segment seg1, Segment seg2);
 
-bool is_parallel(Line line1, Line line2);
+bool parallel(Segment seg1, Segment seg2);
 
-Points cal_polygon(Line line);
+enum POLYGON_TYPE {
+    CONVEX, CONCAVE
+};
 
+Points polygon(const Line& line, POLYGON_TYPE type = CONVEX);
+
+Points convex_hull(Points ps);
 
 #endif //CUPID_GEOMETRY_H
