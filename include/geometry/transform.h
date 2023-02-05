@@ -9,9 +9,9 @@
 #ifndef CUPID_TRANSFORM_H
 #define CUPID_TRANSFORM_H
 
-#include "osm/node.h"
+#include "geometry.h"
 
-bool out_of_china(double lon, double lat);
+bool in_china(double lon, double lat);
 
 double translate_lon(double lon, double lat);
 
@@ -25,8 +25,8 @@ Coordinates batch_wgs2gcj(const Coordinates &wgs_coords);
 
 Coordinates batch_gcj2wgs(const Coordinates &gcj_coords);
 
-Coordinates batch_wgs2gcj(const osm::NodeList &wgs_nodes);
+Point coordinate2relative(Coordinate coord);
 
-Coordinates batch_gcj2wgs(const osm::NodeList &gcj_nodes);
+Points coordinates2relative(const Coordinates &coords);
 
 #endif //CUPID_TRANSFORM_H

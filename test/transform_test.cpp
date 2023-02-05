@@ -21,5 +21,12 @@ int main() {
     for (auto c: batch_gcj2wgs(cs)) {
         printf("(%f, %f) ", c.lon, c.lat);
     }
+    Points rcs = coordinates2relative(cs);
+    printf("\ngeography-->geometry\n");
+    for (auto c: rcs) {
+        printf("(%f, %f) ", c.x, c.y);
+    }
+    auto len = cal_length(rcs);
+    printf("\n%f", len);
     return 0;
 }

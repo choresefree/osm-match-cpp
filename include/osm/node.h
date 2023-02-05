@@ -11,7 +11,7 @@
 
 #include <string>
 #include "tag.h"
-#include "geometry/coordinate.h"
+#include "geometry/geometry.h"
 
 namespace osm {
     class Node {
