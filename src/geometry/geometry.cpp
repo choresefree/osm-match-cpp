@@ -6,6 +6,8 @@
 * @Description: TODO
 */
 
+#include <iostream>
+#include <utility>
 #include <vector>
 #include <cmath>
 #include "geometry/geometry.h"
@@ -17,6 +19,12 @@ Point::Point(double x, double y) {
     this->y = y;
 }
 
+Point::Point(const std::string &id, double x, double y) {
+    this->id = id;
+    this->x = x;
+    this->y = y;
+}
+
 Segment::Segment() = default;
 
 Segment::Segment(Point point1, Point point2) {
@@ -24,9 +32,21 @@ Segment::Segment(Point point1, Point point2) {
     this->point2 = point2;
 }
 
+Segment::Segment(const std::string &id, Point point1, Point point2) {
+    this->id = id;
+    this->point1 = point1;
+    this->point2 = point2;
+}
+
 Line::Line() = default;
 
 Line::Line(std::vector<Point> points) {
+    this->points = std::move(points);
+    this->length = cal_length(this->points);
+}
+
+Line::Line(const std::string &id, std::vector<Point> points) {
+    this->id = id;
     this->points = std::move(points);
     this->length = cal_length(this->points);
 }
@@ -107,6 +127,19 @@ double angle(const Segment &seg1, const Segment &seg2) {
     return abs(cal_angle);
 }
 
+bool overlap(const BBox &bbox1, const BBox &bbox2) {
+    double x_max_1 = std::max(bbox1.first.x, bbox1.second.x);
+    double x_max_2 = std::max(bbox2.first.x, bbox2.second.x);
+    double x_min_1 = std::min(bbox1.first.x, bbox1.second.x);
+    double x_min_2 = std::min(bbox2.first.x, bbox2.second.x);
+    double y_max_1 = std::max(bbox1.first.y, bbox1.second.y);
+    double y_max_2 = std::max(bbox2.first.y, bbox2.second.y);
+    double y_min_1 = std::min(bbox1.first.y, bbox1.second.y);
+    double y_min_2 = std::min(bbox2.first.y, bbox2.second.y);
+    return (x_max_1 > x_min_2 and x_max_2 > x_min_1) and (y_max_1 > y_min_2 and y_max_2 > y_min_1);
+}
+
+
 bool intersect(const Segment &seg1, const Segment &seg2) {
     auto x1 = seg1.point1.x, y1 = seg1.point1.y;
     auto x2 = seg1.point2.x, y2 = seg1.point2.y;
@@ -176,27 +209,38 @@ Points convex_hull(const Points &ps) {
     return res;
 }
 
-Segment midline(const Segment &segment, double extend_length){
+Segment midline(const Segment &segment, double extend_length) {
     auto x1 = segment.point1.x, y1 = segment.point1.y;
     auto x2 = segment.point2.x, y2 = segment.point2.y;
-    auto mid_x = (x1+x2)/ 2, mid_y = (y1+y2)/ 2;
-    auto t = sqrt(pow(extend_length / 2, 2) / (pow(x2-x1, 2) + pow(y2-y1, 2)));
-    auto x3 = mid_x - t*(y2 - y1);
-    auto y3 = mid_y + t*(x2 - x1);
-    auto x4 = mid_x + t*(y2 - y1);
-    auto y4 = mid_y - t*(x2 - x1);
+    auto mid_x = (x1 + x2) / 2, mid_y = (y1 + y2) / 2;
+    auto t = sqrt(pow(extend_length / 2, 2) / (pow(x2 - x1, 2) + pow(y2 - y1, 2)));
+    auto x3 = mid_x - t * (y2 - y1);
+    auto y3 = mid_y + t * (x2 - x1);
+    auto x4 = mid_x + t * (y2 - y1);
+    auto y4 = mid_y - t * (x2 - x1);
     Point point3 = Point(x3, y3);
     Point point4 = Point(x4, y4);
     Segment res = Segment(point3, point4);
     return res;
 }
 
+BBox bbox(const Points &points, double extend_length) {
+    double min_x = INFINITY, min_y = INFINITY, max_x = double(-INFINITY), max_y = double(-INFINITY);
+    for (const auto &p: points) {
+        min_x = std::min(min_x, p.x);
+        min_y = std::min(min_y, p.y);
+        max_x = std::max(max_x, p.x);
+        max_y = std::max(max_y, p.y);
+    }
+    return {{min_x - extend_length, min_y - extend_length},
+            {max_x + extend_length, max_y + extend_length}};
+}
 
 Points polygon(const Line &line, double extend_length, POLYGON_TYPE type) {
     Points more_ps;
     more_ps.push_back(line.points[0]);
-    for (int i=1; i<line.points.size(); i++){
-        auto mid = midline({line.points[i], line.points[i-1]}, extend_length);
+    for (int i = 1; i < line.points.size(); i++) {
+        auto mid = midline({line.points[i], line.points[i - 1]}, extend_length);
         more_ps.push_back(line.points[i]);
         more_ps.push_back(mid.point1);
         more_ps.push_back(mid.point2);

@@ -12,7 +12,7 @@
 #include "http/httplib.h"
 #include "common/common.h"
 
-const char *DOWNLOAD_OSM_PATH = "/api/map?bbox=%f,%f,%f,%f";
+const char *DOWNLOAD_OSM_PATH = "/api/osm_map?bbox=%f,%f,%f,%f";
 const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
 const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
 
@@ -168,6 +168,15 @@ void osm::Map::dump_to_xml(const std::string &file_path) const {
 
 osm::Node osm::Map::get_node_by_id(const std::string &node_id) {
     return this->nodes[node_id];
+}
+
+osm::NodeList osm::Map::get_nodes_by_way_id(const std::string &way_id){
+    NodeList res;
+    Way way = this->get_way_by_id(way_id);
+    for (const auto& n_id : way.get_node_ids()){
+        res.push_back(this->get_node_by_id(n_id));
+    }
+    return res;
 }
 
 osm::Way osm::Map::get_way_by_id(const std::string &way_id) {

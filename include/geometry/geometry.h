@@ -10,6 +10,7 @@
 #define CUPID_GEOMETRY_H
 
 #include <vector>
+#include <string>
 
 class Point {
 public:
@@ -17,11 +18,16 @@ public:
 
     Point(double x, double y);
 
-    double x{};
-    double y{};
+    Point(const std::string& id, double x, double y);
+
+    std::string id;
+    double x;
+    double y;
 };
 
 typedef std::vector<Point> Points;
+
+typedef std::pair<Point, Point> BBox; // <left bottom, right top>
 
 class Segment {
 public:
@@ -29,6 +35,9 @@ public:
 
     Segment(Point point1, Point point2);
 
+    Segment(const std::string& id, Point point1, Point point2);
+
+    std::string id;
     Point point1;
     Point point2;
 };
@@ -40,9 +49,14 @@ public:
 
     Line(std::vector<Point> points);
 
+    Line(const std::string &id, std::vector<Point> points);
+
+    std::string id;
     Points points;
-    double length;
+    double length{};
 };
+
+typedef std::vector<Line> Lines;
 
 class Coordinate {
 public:
@@ -69,6 +83,8 @@ double distance(const Point &point, const Line &line);
 
 double angle(const Segment &seg1, const Segment &seg2);
 
+bool overlap(const BBox &bbox1, const BBox &bbox2);
+
 bool intersect(const Segment &seg1, const Segment &seg2);
 
 bool intersect(const Points &polygon, const Line &line);
@@ -81,9 +97,11 @@ enum POLYGON_TYPE {
     CONVEX, CONCAVE
 };
 
-Segment midline(const Segment &segment, double extend_length = 500);
+Segment midline(const Segment &segment, double extend_length = 50);
 
-Points polygon(const Line &line, double extend_length = 500, POLYGON_TYPE type = CONVEX);
+BBox bbox(const Points &points, double extend_length = 0);
+
+Points polygon(const Line &line, double extend_length = 50, POLYGON_TYPE type = CONVEX);
 
 Points convex_hull(const Points &ps);
 
