@@ -41,6 +41,7 @@ public:
     Line(std::vector<Point> points);
 
     Points points;
+    double length;
 };
 
 class Coordinate {
@@ -58,28 +59,38 @@ typedef std::vector<Coordinate> Coordinates;
 
 double cal_length(const Points &points);
 
-Point pedal(Point point, Segment segment);
+Point pedal(const Point &point, const Segment &segment);
 
-double distance(Point point1, Point point2);
+double distance(const Point &point1, const Point &point2);
 
-double distance(Point point, Segment segment);
+double distance(const Point &point, const Segment &segment);
 
-double distance(Point point, Line line);
+double distance(const Point &point, const Line &line);
 
-double angle(Segment seg1, Segment seg2);
+double angle(const Segment &seg1, const Segment &seg2);
 
-bool intersect(Segment seg1, Segment seg2);
+bool intersect(const Segment &seg1, const Segment &seg2);
 
-bool vertical(Segment seg1, Segment seg2);
+bool intersect(const Points &polygon, const Line &line);
 
-bool parallel(Segment seg1, Segment seg2);
+bool vertical(const Segment &seg1, const Segment &seg2);
+
+bool parallel(const Segment &seg1, const Segment &seg2);
 
 enum POLYGON_TYPE {
     CONVEX, CONCAVE
 };
 
-Points polygon(const Line& line, POLYGON_TYPE type = CONVEX);
+Segment midline(const Segment &segment, double extend_length = 500);
 
-Points convex_hull(Points ps);
+Points polygon(const Line &line, double extend_length = 500, POLYGON_TYPE type = CONVEX);
+
+Points convex_hull(const Points &ps);
+
+bool in_polygon(const Points &polygon, const Point &point);
+
+bool in_polygon(const Points &polygon, const Line &line);
+
+bool out_polygon(const Points &polygon, const Line &line);
 
 #endif //CUPID_GEOMETRY_H
