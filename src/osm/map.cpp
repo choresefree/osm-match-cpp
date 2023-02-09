@@ -209,7 +209,7 @@ osm::NodeIDList osm::Map::add_nodes(const osm::NodeMap &add_nodes) {
     return added_node_ids;
 }
 
-std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const osm::Tags &tags) {
+std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const Tags &tags) {
     NodeIDList legal_node_ids;
     for (const auto &node_id: node_ids) {
         if (this->nodes.find(node_id) == this->nodes.end()) {

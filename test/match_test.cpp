@@ -12,16 +12,15 @@ using namespace match;
 
 int main() {
     Match match = Match();
-    match.load_track_from_json("/Users/xiezhenyu/数据集/GPS/json/Taxi_2034_0_7.json");
-    match.load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/online.osm");
+    match.load_track_from_json("/Users/xiezhenyu/数据集/GPS/json/Taxi_2034_51_64.json");
+    match.load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/map.osm");
     match.geography2geometry();
     match.observe();
-    for (const auto& ob_ways: match.observation) {
-        auto coord = match.track_nodes_mapping[ob_ways.first].coord;
-        printf("node id:%s\n (%f, %f)\n", ob_ways.first.c_str(), coord.lon, coord.lat);
-        for (const auto& way_id : ob_ways.second){
-            printf("%s ", way_id.c_str());
+    auto score_matrix = match.cal_score();
+    for (const auto &scores: score_matrix) {
+        for (const auto &score: scores) {
+            printf("way id:%s, score:%f\n", score.way_id.c_str(), score.score);
         }
-        printf("\n");
+        printf("------------------------------------------------------\n");
     }
 }

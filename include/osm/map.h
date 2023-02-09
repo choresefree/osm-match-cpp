@@ -11,11 +11,12 @@
 #define CUPID_MAP_H
 
 #include "way.h"
+#include "common/object.h"
 
 typedef std::unordered_map<std::string, std::vector<std::string>> NodeParents;
 
 namespace osm {
-    class Map {
+    class Map :public Object{
     public:
         Map();
 

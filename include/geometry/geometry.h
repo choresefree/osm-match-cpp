@@ -11,8 +11,9 @@
 
 #include <vector>
 #include <string>
+#include "common/object.h"
 
-class Point {
+class Point :public Object{
 public:
     Point();
 
@@ -20,7 +21,8 @@ public:
 
     Point(const std::string& id, double x, double y);
 
-    std::string id;
+    Point(const std::string& id, double x, double y, const Tags &tags);
+
     double x;
     double y;
 };
@@ -29,7 +31,7 @@ typedef std::vector<Point> Points;
 
 typedef std::pair<Point, Point> BBox; // <left bottom, right top>
 
-class Segment {
+class Segment :public Object{
 public:
     Segment();
 
@@ -37,28 +39,30 @@ public:
 
     Segment(const std::string& id, Point point1, Point point2);
 
-    std::string id;
+    Segment(const std::string& id, Point point1, Point point2, Tags tags);
+
     Point point1;
     Point point2;
 };
 
+typedef std::vector<Segment> Segments;
 
-class Line {
+
+class Line :public Object{
 public:
     Line();
 
     Line(std::vector<Point> points);
 
-    Line(const std::string &id, std::vector<Point> points);
+    Line(const std::string &id, std::vector<Point> points, const Tags& tags);
 
-    std::string id;
     Points points;
     double length{};
 };
 
 typedef std::vector<Line> Lines;
 
-class Coordinate {
+class Coordinate :public Object{
 public:
     Coordinate();
 
@@ -92,6 +96,8 @@ bool intersect(const Points &polygon, const Line &line);
 bool vertical(const Segment &seg1, const Segment &seg2);
 
 bool parallel(const Segment &seg1, const Segment &seg2);
+
+Points thick(const Points &points, double min_interval=20);
 
 enum POLYGON_TYPE {
     CONVEX, CONCAVE

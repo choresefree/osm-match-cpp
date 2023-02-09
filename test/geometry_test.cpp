@@ -29,8 +29,8 @@ int main() {
         }
     }
     printf("angle: %f\n", angle({{0, 1}, {1, 0}}, {{0, 0}, {1, 0}}));
-    printf("angle: %f\n", angle({{0, 1}, {1, 0}}, {{1, 2}, {3, 1}}));
-    printf("angle: %f\n", angle({{0, -1}, {-1, 0}}, {{1, 2}, {3, 1}}));
+    printf("angle: %f\n", angle({{0, 1}, {1, 0}}, {{0, 0}, {1, 1}}));
+    printf("angle: %f\n", angle({{0, 0}, {1, 0}}, {{0, 0}, {-1, 1}}));
     printf("intersect: %d\n", intersect({{0, 1}, {1, 0}}, {{0, 0}, {1, 0}}));
     printf("intersect: %d\n", intersect({{0, 1}, {1, 0}}, {{0, 0}, {1, 1}}));
     printf("intersect: %d\n", intersect({{0, 1}, {1, 0}}, {{2, 3}, {5, 6}}));

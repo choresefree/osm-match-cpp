@@ -25,6 +25,13 @@ Point::Point(const std::string &id, double x, double y) {
     this->y = y;
 }
 
+Point::Point(const std::string &id, double x, double y, const Tags &tags) {
+    this->id = id;
+    this->x = x;
+    this->y = y;
+    this->tags = tags;
+}
+
 Segment::Segment() = default;
 
 Segment::Segment(Point point1, Point point2) {
@@ -38,6 +45,13 @@ Segment::Segment(const std::string &id, Point point1, Point point2) {
     this->point2 = point2;
 }
 
+Segment::Segment(const std::string &id, Point point1, Point point2, Tags tags) {
+    this->id = id;
+    this->point1 = point1;
+    this->point2 = point2;
+    this->tags = tags;
+}
+
 Line::Line() = default;
 
 Line::Line(std::vector<Point> points) {
@@ -45,9 +59,10 @@ Line::Line(std::vector<Point> points) {
     this->length = cal_length(this->points);
 }
 
-Line::Line(const std::string &id, std::vector<Point> points) {
+Line::Line(const std::string &id, std::vector<Point> points, const Tags &tags) {
     this->id = id;
     this->points = std::move(points);
+    this->tags = tags;
     this->length = cal_length(this->points);
 }
 
@@ -175,11 +190,28 @@ bool parallel(const Segment &seg1, const Segment &seg2) {
     return (x1 * y2) == (x2 * y1);
 }
 
-bool cmp(Point a, Point b) {
+Points thick(const Points &points, double min_interval) {
+    if (points.size() == 1) {
+        return points;
+    }
+    Points res = {points[0]};
+    for (int i = 1; i < points.size(); i++) {
+        int seg_num = int(cal_length({points[i - 1], points[i]}) / min_interval);
+        double move_x = (points[i].x - points[i - 1].x) / seg_num, move_y = (points[i].y - points[i - 1].y) / seg_num;
+        for (int j = 1; j <= seg_num; j++) {
+            Point point = Point(points[i - 1].id + "-" + std::to_string(j + 2),
+                                points[i - 1].x + move_x * j, points[i - 1].y + move_y * j, points[i - 1].tags);
+            res.push_back(point);
+        }
+    }
+    return res;
+}
+
+bool cmp(const Point &a, const Point &b) {
     return (a.x < b.x || (a.x == b.x && a.y < b.y));
 }
 
-double mul(Point a, Point b, Point c) {
+double mul(const Point &a, const Point &b, const Point &c) {
     return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 

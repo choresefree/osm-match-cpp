@@ -12,7 +12,7 @@
 #include "node.h"
 
 namespace osm {
-    class Way {
+    class Way :public Object{
     public:
         Way();
 

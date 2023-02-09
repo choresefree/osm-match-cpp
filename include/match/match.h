@@ -15,6 +15,14 @@
 
 const int DIM = 2;
 
+struct Score {
+    std::string way_id;
+    double score;
+};
+
+typedef std::vector<Score> Scores;
+
+typedef std::vector<Scores> ScoreMatrix;
 
 namespace match {
     class Match {
@@ -29,22 +37,21 @@ namespace match {
 
         void geography2geometry();
 
-        static bool observe_callback(const std::string &line_id);
+        static bool observe_callback(const Line &line);
 
         void observe();
 
-        void cal_score_matrix();
+        ScoreMatrix cal_score();
 
         void viterbi();
 
-        osm::NodeMap track_nodes_mapping;
-        std::unordered_map<std::string, osm::WayIDList> observation;
+        std::vector<Lines> observation;
 
-    private:
-        Points track_points;
-        RTree<std::string, double, DIM, double> rtree;
         osm::Map osm_map;
-        std::unordered_map<std::string, Line> map_line_mapping;
+
+        Segments track;
+    private:
+        RTree<Line, double, DIM, double> rtree;
     };
 }
 
