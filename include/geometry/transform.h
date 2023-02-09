@@ -3,30 +3,34 @@
 * @Author: sefree
 * @Email: 1836662622@qq.com
 * @Data:2023/1/31 10:54
-* @Description: TODO
+* @Description: coordinate system transformation and transformation between geographical and plane coordinates
 */
 
 #ifndef CUPID_TRANSFORM_H
 #define CUPID_TRANSFORM_H
 
-#include "osm/node.h"
+#include "geometry.h"
 
-bool out_of_china(double lon, double lat);
+bool in_china(double lon, double lat);
 
 double translate_lon(double lon, double lat);
 
 double translate_lat(double lon, double lat);
 
-Coordinate wgs2gcj(Coordinate wgs_coord);
+Coordinate wgs2gcj(const Coordinate &wgs_coord);
 
-Coordinate gcj2wgs(Coordinate gcj_coord);
+Coordinate gcj2wgs(const Coordinate &gcj_coord);
 
 Coordinates batch_wgs2gcj(const Coordinates &wgs_coords);
 
 Coordinates batch_gcj2wgs(const Coordinates &gcj_coords);
 
-Coordinates batch_wgs2gcj(const osm::NodeList &wgs_nodes);
+Point coordinate2relative(const Coordinate &coord);
 
-Coordinates batch_gcj2wgs(const osm::NodeList &gcj_nodes);
+Points batch_coordinate2relative(const Coordinates &coords);
+
+Coordinate relative2coordinate(const Point & point);
+
+Coordinates batch_relative2coordinate(const Points & points);
 
 #endif //CUPID_TRANSFORM_H

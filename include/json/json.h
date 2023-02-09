@@ -1055,7 +1055,7 @@ public:
   /// Same as removeMember(const char* begin, const char* end, Value* removed),
   /// but 'key' is null-terminated.
   bool removeMember(const char* key, Value* removed);
-  /** \brief Remove the named map member.
+  /** \brief Remove the named osm_map member.
    *
    *  Update 'removed' iff removed.
    *  \param key may contain embedded nulls.

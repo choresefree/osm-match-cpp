@@ -1133,7 +1133,7 @@ namespace httplib {
         std::thread::id socket_requests_are_from_thread_ = std::thread::id();
         bool socket_should_be_closed_when_request_is_done_ = false;
 
-        // Hostname-IP map
+        // Hostname-IP osm_map
         std::map<std::string, std::string> addr_map_;
 
         // Default headers
@@ -4430,7 +4430,7 @@ static WSInit wsinit_;
 
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
         inline std::pair<std::string, std::string> make_digest_authentication_header(
-    const Request &req, const std::map<std::string, std::string> &auth,
+    const Request &req, const std::osm_map<std::string, std::string> &auth,
     size_t cnonce_count, const std::string &cnonce, const std::string &username,
     const std::string &password, bool is_proxy = false) {
   std::string nc;
@@ -6282,7 +6282,7 @@ static WSInit wsinit_;
         is_proxy ? proxy_digest_auth_password_ : digest_auth_password_;
 
     if (!username.empty() && !password.empty()) {
-      std::map<std::string, std::string> auth;
+      std::osm_map<std::string, std::string> auth;
       if (detail::parse_www_authenticate(res, auth, is_proxy)) {
         Request new_req = req;
         new_req.authorization_count_ += 1;
@@ -7785,7 +7785,7 @@ inline bool SSLClient::connect_with_proxy(Socket &socket, Response &res,
   if (res2.status == 407) {
     if (!proxy_digest_auth_username_.empty() &&
         !proxy_digest_auth_password_.empty()) {
-      std::map<std::string, std::string> auth;
+      std::osm_map<std::string, std::string> auth;
       if (detail::parse_www_authenticate(res2, auth, true)) {
         Response res3;
         if (!detail::process_client_socket(

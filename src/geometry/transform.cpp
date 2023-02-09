@@ -6,13 +6,22 @@
 * @Description: TODO
 */
 
-#include "osm/node.h"
+#include <cmath>
+#include "geometry/transform.h"
+
 
 const double A = 6378245.0;
 const double E = 0.00669342162296594323;
+const double RAD_TO_DEGREE = 57.29577951308232;
+const double DEGREE_TO_RAD = 0.017453292519943295;
+const double BASE_LON = 120;
+const double BASE_LAT = 30;
+const double M = 6352352.378748541;
+const double N = 6383807.635861196;
+const double R = 5471991.159432675;
 
-bool out_of_china(double lon, double lat) {
-    return lon < 72.004 || lon > 137.8374 || lat < 0.8293 || lat > 55.8271;
+bool in_china(double lon, double lat) {
+    return lon >= 72.004 && lon <= 137.8374 & lat >= 0.8293 & lat <= 55.8271;
 }
 
 double translate_lon(double lon, double lat) {
@@ -31,14 +40,10 @@ double translate_lat(double lon, double lat) {
     return ret;
 }
 
-Coordinate gcj2wgs(Coordinate gcj_coord) {
+Coordinate gcj2wgs(const Coordinate &gcj_coord) {
     auto gcj_lon = gcj_coord.lon, gcj_lat = gcj_coord.lat;
     Coordinate wgs_coord;
-    if (out_of_china(gcj_lon, gcj_lat)) {
-        wgs_coord.lon = gcj_lon;
-        wgs_coord.lat = gcj_lat;
-        return wgs_coord;
-    } else {
+    if (in_china(gcj_lon, gcj_lat)) {
         double d_lat = translate_lat(gcj_lon - 105.0, gcj_lat - 35.0);
         double d_lon = translate_lon(gcj_lon - 105.0, gcj_lat - 35.0);
         double rad_lat = gcj_lat / 180.0 * M_PI;
@@ -50,17 +55,17 @@ Coordinate gcj2wgs(Coordinate gcj_coord) {
         wgs_coord.lon = gcj_lon - d_lon;
         wgs_coord.lat = gcj_lat - d_lat;
         return wgs_coord;
+    } else {
+        wgs_coord.lon = gcj_lon;
+        wgs_coord.lat = gcj_lat;
+        return wgs_coord;
     }
 }
 
-Coordinate wgs2gcj(Coordinate wgs_coord) {
+Coordinate wgs2gcj(const Coordinate &wgs_coord) {
     auto wgs_lon = wgs_coord.lon, wgs_lat = wgs_coord.lat;
     Coordinate gcj_pos;
-    if (out_of_china(wgs_lon, wgs_lat)) {
-        gcj_pos.lon = wgs_lon;
-        gcj_pos.lat = wgs_lat;
-        return gcj_pos;
-    } else {
+    if (in_china(wgs_lon, wgs_lat)) {
         double d_lat = translate_lat(wgs_lon - 105.0, wgs_lat - 35.0);
         double d_lon = translate_lon(wgs_lon - 105.0, wgs_lat - 35.0);
         double rad_lat = wgs_lat / 180.0 * M_PI;
@@ -71,6 +76,10 @@ Coordinate wgs2gcj(Coordinate wgs_coord) {
         d_lat = (d_lat * 180.0) / ((A * (1 - E)) / (magic * s_magic) * M_PI);
         gcj_pos.lon = wgs_lon + d_lon;
         gcj_pos.lat = wgs_lat + d_lat;
+        return gcj_pos;
+    } else {
+        gcj_pos.lon = wgs_lon;
+        gcj_pos.lat = wgs_lat;
         return gcj_pos;
     }
 }
@@ -91,18 +100,35 @@ Coordinates batch_gcj2wgs(const Coordinates &gcj_coords) {
     return res;
 }
 
-Coordinates batch_wgs2gcj(const osm::NodeList &wgs_nodes) {
-    Coordinates res;
-    for (const auto &wgs_node: wgs_nodes) {
-        res.push_back(wgs2gcj(wgs_node.coord));
+Point coordinate2relative(const Coordinate &coord) {
+    double lon = (coord.lon - BASE_LON) * DEGREE_TO_RAD;
+    double lat = (coord.lat - BASE_LAT) * DEGREE_TO_RAD;
+    Point res = {lon * R, lat * M};
+    return res;
+}
+
+Points batch_coordinate2relative(const Coordinates &coords) {
+    Points res;
+    for (auto coord: coords) {
+        auto relative = coordinate2relative(coord);
+        res.push_back(relative);
     }
     return res;
 }
 
-Coordinates batch_gcj2wgs(const osm::NodeList &gcj_nodes) {
+Coordinate relative2coordinate(const Point &point) {
+    double lon = BASE_LON + point.x / R * RAD_TO_DEGREE;
+    double lat = BASE_LAT + point.y / M * RAD_TO_DEGREE;
+    Coordinate res = Coordinate(lon, lat);
+    return res;
+
+}
+
+Coordinates batch_relative2coordinate(const Points &points) {
     Coordinates res;
-    for (const auto &gcj_node: gcj_nodes) {
-        res.push_back(gcj2wgs(gcj_node.coord));
+    for (auto point: points) {
+        auto coord = relative2coordinate(point);
+        res.push_back(coord);
     }
     return res;
 }

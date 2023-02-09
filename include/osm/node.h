@@ -10,11 +10,11 @@
 #define CUPID_NODE_H
 
 #include <string>
-#include "tag.h"
-#include "geometry/coordinate.h"
+#include "geometry/geometry.h"
+#include "common/object.h"
 
 namespace osm {
-    class Node {
+    class Node :public Object{
     public:
         Node();
 

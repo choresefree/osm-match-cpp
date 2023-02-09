@@ -3,18 +3,20 @@
 * @Author: sefree
 * @Email: 1836662622@qq.com
 * @Data:2023/1/31 10:54
-* @Description: TODO
+* @Description: the osm osm_map class, which carries the geographic information in the osm file, currently only supports
+ * coordinate points and way
 */
 
 #ifndef CUPID_MAP_H
 #define CUPID_MAP_H
 
 #include "way.h"
+#include "common/object.h"
 
 typedef std::unordered_map<std::string, std::vector<std::string>> NodeParents;
 
 namespace osm {
-    class Map {
+    class Map :public Object{
     public:
         Map();
 
@@ -27,6 +29,8 @@ namespace osm {
         void load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway = false);
 
         Node get_node_by_id(const std::string &node_id);
+
+        NodeList get_nodes_by_way_id(const std::string &way_id);
 
         Way get_way_by_id(const std::string &way_id);
 
