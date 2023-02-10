@@ -170,10 +170,10 @@ osm::Node osm::Map::get_node_by_id(const std::string &node_id) {
     return this->nodes[node_id];
 }
 
-osm::NodeList osm::Map::get_nodes_by_way_id(const std::string &way_id){
+osm::NodeList osm::Map::get_nodes_by_way_id(const std::string &way_id) {
     NodeList res;
     Way way = this->get_way_by_id(way_id);
-    for (const auto& n_id : way.get_node_ids()){
+    for (const auto &n_id: way.get_node_ids()) {
         res.push_back(this->get_node_by_id(n_id));
     }
     return res;
@@ -221,4 +221,19 @@ std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const Tags &tags)
     Way add_way = Way(std::to_string(this->add_way_id), legal_node_ids, tags);
     this->ways[std::to_string(add_way_id--)] = add_way;
     return add_way.id;
+}
+
+bool osm::Map::connect(const std::string &way_id1, const std::string &way_id2) {
+    Way way1 = this->get_way_by_id(way_id1);
+    Way way2 = this->get_way_by_id(way_id2);
+    NodeIDList way1_node_ids = way1.get_node_ids();
+    NodeIDList way2_node_ids = way2.get_node_ids();
+    for (std::string &node_id1: way1_node_ids) {
+        for (std::string &node_id2: way2_node_ids) {
+            if (node_id1 == node_id2) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

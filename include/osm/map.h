@@ -46,6 +46,8 @@ namespace osm {
 
         NodeList get_nodes() const;
 
+        bool connect(const std::string &way_id1, const std::string &way_id2);
+
     private:
         WayMap ways;
         NodeMap nodes;

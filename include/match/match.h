@@ -20,6 +20,12 @@ struct Score {
     double score;
 };
 
+struct ViterbiT {
+    std::string way_id;
+    osm::WayIDList tracing;
+    double score;
+};
+
 typedef std::vector<Score> Scores;
 
 typedef std::vector<Scores> ScoreMatrix;

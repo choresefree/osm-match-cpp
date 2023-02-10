@@ -196,7 +196,12 @@ Points thick(const Points &points, double min_interval) {
     }
     Points res = {points[0]};
     for (int i = 1; i < points.size(); i++) {
-        int seg_num = int(cal_length({points[i - 1], points[i]}) / min_interval);
+        double interval_len = cal_length({points[i - 1], points[i]});
+        if (interval_len <= min_interval){
+            res.push_back(points[i]);
+            continue;
+        }
+        int seg_num = int(interval_len / min_interval);
         double move_x = (points[i].x - points[i - 1].x) / seg_num, move_y = (points[i].y - points[i - 1].y) / seg_num;
         for (int j = 1; j <= seg_num; j++) {
             Point point = Point(points[i - 1].id + "-" + std::to_string(j + 2),
