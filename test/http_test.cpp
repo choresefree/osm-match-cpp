@@ -12,16 +12,21 @@
 
 int main()
 {
-    httplib::Client cli("http://overpass-api.de");
-    if (auto res = cli.Get("/api/map?bbox=121.473600,31.176300,121.489100,31.214100")) {
+    std::string url = "http://overpass-api.de";
+    std::string api = "/api/map?bbox=121.279457,30.736143,121.283999,30.741164";
+
+    httplib::Client cli(url);
+    cli.set_connection_timeout(500);
+    cli.set_read_timeout(500);
+    if (auto res = cli.Get(api)) {
         if (res->status == 200) {
             std::cout << res->body << std::endl;
-            dump_file(res->body, "/Users/xiezhenyu/GithubProjects/cupid/test/resource/new.osm");
+//            dump_file(res->body, "/Users/xiezhenyu/GithubProjects/cupid/test/resource/new.osm");
         }else{
             printf("http status exception: %d\n", res->status);
         }
     } else {
         auto err = res.error();
-        std::cout << "HTTP error: " << httplib::to_string(err) << std::endl;
+        std::cout << "http error: " << httplib::to_string(err) << std::endl;
     }
 }

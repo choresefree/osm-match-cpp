@@ -24,7 +24,7 @@ namespace osm {
 
         void dump_to_xml(const std::string &file_path) const;
 
-        void load_from_osm(const std::string &file_path, bool only_highway = false);
+        bool load_from_osm(const std::string &file_path, bool only_highway = false);
 
         bool load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway = false);
 

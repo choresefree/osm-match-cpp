@@ -62,11 +62,6 @@ bool match::Match::load_track_from_json(const std::string &file_path) {
     return true;
 }
 
-bool match::Match::load_map_from_osm(const std::string &file_path) {
-    this->osm_map.load_from_osm(file_path);
-    return true;
-}
-
 match::Match::Match() = default;
 
 void match::Match::print_track() {
@@ -242,12 +237,11 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
             return this->match_result;
         }
     } else {
-        if (!this->load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/map.osm")) {
+        if (!this->osm_map.load_from_osm(map_file_path)) {
             printf("load map osm file failed\n");
             return this->match_result;
         }
     }
-    this->load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/map.osm");
     this->geography2geometry();
     this->observe();
     this->viterbi();

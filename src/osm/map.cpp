@@ -59,11 +59,11 @@ void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only
 
 osm::Map::Map() = default;
 
-void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
+bool osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
     Map map = Map();
     pugi::xml_document doc;
     if (!doc.load_file(file_path.c_str())) {
-        printf("load file failed");
+        printf("load file %s failed\n", file_path.c_str());
     }
     pugi::xml_node root = doc.child("osm");
     auto xml_nodes = root.children("node");
@@ -105,6 +105,7 @@ void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
         map_ways[way_id] = map_way;
     }
     this->init_map(map_ways, map_nodes, only_highway);
+    return true;
 }
 
 bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
@@ -113,6 +114,8 @@ bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
     printf("down load osm from %s%s\n", DOWNLOAD_OSM_URL.c_str(), path);
     const std::string path_string = path;
     httplib::Client cli(DOWNLOAD_OSM_URL);
+    cli.set_connection_timeout(60  *5);
+    cli.set_read_timeout(60  *5);
     if (auto res = cli.Get(path_string)) {
         if (res->status == 200) {
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
