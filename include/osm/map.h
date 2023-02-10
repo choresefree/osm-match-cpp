@@ -26,7 +26,7 @@ namespace osm {
 
         void load_from_osm(const std::string &file_path, bool only_highway = false);
 
-        void load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway = false);
+        bool load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway = false);
 
         Node get_node_by_id(const std::string &node_id);
 

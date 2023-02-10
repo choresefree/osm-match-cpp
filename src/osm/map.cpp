@@ -12,7 +12,7 @@
 #include "http/httplib.h"
 #include "common/common.h"
 
-const char *DOWNLOAD_OSM_PATH = "/api/osm_map?bbox=%f,%f,%f,%f";
+const char *DOWNLOAD_OSM_PATH = "/api/map?bbox=%f,%f,%f,%f";
 const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
 const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
 
@@ -107,7 +107,7 @@ void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
     this->init_map(map_ways, map_nodes, only_highway);
 }
 
-void osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
+bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
     char *path = new char[0];
     sprintf(path, DOWNLOAD_OSM_PATH, min_lon, min_lat, max_lon, max_lat);
     printf("down load osm from %s%s\n", DOWNLOAD_OSM_URL.c_str(), path);
@@ -118,14 +118,15 @@ void osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
         } else {
             printf("http status exception: %d\n", res->status);
-            return;
+            return false;
         }
     } else {
         auto err = res.error();
         printf("http error: %s\n", httplib::to_string(err).c_str());
-        return;
+        return false;
     }
     this->load_from_osm(OSM_CACHE_DIR + "http.osm", only_highway);
+    return true;
 //    remove((OSM_CACHE_DIR + "http.osm").c_str());
 }
 

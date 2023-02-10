@@ -29,8 +29,12 @@ bool match::Match::load_track_from_json(const std::string &file_path) {
         for (const auto &key: p.getMemberNames()) {
             if (key == "lon") {
                 node.coord.lon = p["lon"].asDouble();
+                this->min_lon = std::min(this->min_lon, node.coord.lon);
+                this->max_lon = std::max(this->max_lon, node.coord.lon);
             } else if (key == "lat") {
                 node.coord.lat = p["lat"].asDouble();
+                this->min_lat = std::min(this->min_lat, node.coord.lat);
+                this->max_lat = std::max(this->max_lat, node.coord.lat);
             } else {
                 tags[key] = p[key].asString();
             }
@@ -154,23 +158,20 @@ ScoreMatrix match::Match::cal_score() {
 //        printf("node id: %s, coordinates: (%f, %f) --> (%f, %f)\n",
 //               segment.id.c_str(), coord1.lon, coord1.lat, coord2.lon, coord2.lat);
         for (auto line: this->observation[i]) {
-            double cur_angle = angle({line.points[0], line.points[line.points.size() - 1]}, segment);
+            double cur_angle = angle(segment, line);
             if (line.get_tag("oneway") == "yes") {
                 cur_angle = std::min(cur_angle, M_PI - cur_angle);
             }
             double angle_score = cal_angle_score(cur_angle);
-            if (angle_score == 0) {
-                continue;
-            }
             double cur_distance = (distance(segment.point1, line.points) +
                                    distance(segment.point2, line.points)) / 2;
             double distance_score = cal_distance_score(cur_distance);
-            if (distance_score == 0) {
+            if (distance_score == 0 && angle_score == 0) {
                 continue;
             }
 //            printf("way id:%s, angle:%f, angle score:%f, distance score:%f\n",
 //                   line.id.c_str(), cur_angle, angle_score, distance_score);
-            Score cur_way_score = Score{line.id, 0.5 * angle_score + 0.5 * distance_score};
+            Score cur_way_score = Score{line.id, 0.25 * angle_score + 0.75 * distance_score};
             scores.push_back(cur_way_score);
         }
         score_matrix.push_back(scores);
@@ -183,9 +184,9 @@ bool viterbi_cmp(const ViterbiT &a, const ViterbiT &b) {
 }
 
 void match::Match::viterbi() {
+    auto scores = this->cal_score();
     std::vector<ViterbiT> curT;
     std::vector<ViterbiT> preT;
-    auto scores = this->cal_score();
     auto initial_scores = scores[0];
     for (auto score: initial_scores) {
         ViterbiT v = ViterbiT{score.way_id, {score.way_id}, score.score};
@@ -223,10 +224,33 @@ void match::Match::viterbi() {
         }
     }
     sort(curT.begin(), curT.end(), viterbi_cmp);
-    for (const auto &i: curT) {
-        printf("%f\n", i.score);
-        for (const auto &w: i.tracing) {
-            printf("%s ", w.c_str());
+    for (const auto &w: curT[0].tracing) {
+        if (this->match_result.empty() || w != this->match_result[this->match_result.size() - 1]) {
+            this->match_result.push_back(w);
         }
     }
 }
+
+osm::WayIDList match::Match::match(const std::string &track_file_path, const std::string &map_file_path) {
+    if (!this->load_track_from_json(track_file_path)) {
+        printf("load track file failed\n");
+        return this->match_result;
+    }
+    if (map_file_path.empty()) {
+        if (!this->osm_map.load_from_osm(this->min_lon, this->min_lat, this->max_lon, this->max_lat)) {
+            printf("load map osm online failed\n");
+            return this->match_result;
+        }
+    } else {
+        if (!this->load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/map.osm")) {
+            printf("load map osm file failed\n");
+            return this->match_result;
+        }
+    }
+    this->load_map_from_osm("/Users/xiezhenyu/GithubProjects/cupid/test/resource/map.osm");
+    this->geography2geometry();
+    this->observe();
+    this->viterbi();
+    return this->match_result;
+}
+

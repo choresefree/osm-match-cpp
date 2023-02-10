@@ -10,6 +10,7 @@
 #define CUPID_COMMON_H
 
 #include <fstream>
+#include <unistd.h>
 #include "json/json.h"
 
 bool dump_file(const std::string &content, const std::string &file_path);
