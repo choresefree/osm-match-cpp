@@ -87,6 +87,8 @@ double distance(const Point &point, const Line &line);
 
 double angle(const Segment &seg1, const Segment &seg2);
 
+double angle(const Segment &seg, const Line &line);
+
 bool overlap(const BBox &bbox1, const BBox &bbox2);
 
 bool intersect(const Segment &seg1, const Segment &seg2);

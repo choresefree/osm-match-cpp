@@ -12,7 +12,7 @@
 #include "http/httplib.h"
 #include "common/common.h"
 
-const char *DOWNLOAD_OSM_PATH = "/api/osm_map?bbox=%f,%f,%f,%f";
+const char *DOWNLOAD_OSM_PATH = "/api/map?bbox=%f,%f,%f,%f";
 const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
 const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
 
@@ -107,7 +107,7 @@ void osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
     this->init_map(map_ways, map_nodes, only_highway);
 }
 
-void osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
+bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
     char *path = new char[0];
     sprintf(path, DOWNLOAD_OSM_PATH, min_lon, min_lat, max_lon, max_lat);
     printf("down load osm from %s%s\n", DOWNLOAD_OSM_URL.c_str(), path);
@@ -118,14 +118,15 @@ void osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
         } else {
             printf("http status exception: %d\n", res->status);
-            return;
+            return false;
         }
     } else {
         auto err = res.error();
         printf("http error: %s\n", httplib::to_string(err).c_str());
-        return;
+        return false;
     }
     this->load_from_osm(OSM_CACHE_DIR + "http.osm", only_highway);
+    return true;
 //    remove((OSM_CACHE_DIR + "http.osm").c_str());
 }
 
@@ -170,10 +171,10 @@ osm::Node osm::Map::get_node_by_id(const std::string &node_id) {
     return this->nodes[node_id];
 }
 
-osm::NodeList osm::Map::get_nodes_by_way_id(const std::string &way_id){
+osm::NodeList osm::Map::get_nodes_by_way_id(const std::string &way_id) {
     NodeList res;
     Way way = this->get_way_by_id(way_id);
-    for (const auto& n_id : way.get_node_ids()){
+    for (const auto &n_id: way.get_node_ids()) {
         res.push_back(this->get_node_by_id(n_id));
     }
     return res;
@@ -221,4 +222,19 @@ std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const Tags &tags)
     Way add_way = Way(std::to_string(this->add_way_id), legal_node_ids, tags);
     this->ways[std::to_string(add_way_id--)] = add_way;
     return add_way.id;
+}
+
+bool osm::Map::connect(const std::string &way_id1, const std::string &way_id2) {
+    Way way1 = this->get_way_by_id(way_id1);
+    Way way2 = this->get_way_by_id(way_id2);
+    NodeIDList way1_node_ids = way1.get_node_ids();
+    NodeIDList way2_node_ids = way2.get_node_ids();
+    for (std::string &node_id1: way1_node_ids) {
+        for (std::string &node_id2: way2_node_ids) {
+            if (node_id1 == node_id2) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

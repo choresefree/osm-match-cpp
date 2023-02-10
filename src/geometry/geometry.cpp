@@ -131,6 +131,23 @@ double distance(const Point &point, const Line &line) {
     return dis;
 }
 
+double angle(const Segment &seg, const Line &line) {
+    double min_dis1 = INFINITY, min_dis2 = INFINITY;
+    Point p1 = line.points[0], p2 = line.points[line.points.size()-1];
+    for (const auto& p : line.points){
+        double cmp_dis1 = distance(p1, p), cmp_dis2 = distance(p2, p);
+        if (cmp_dis1 < min_dis1){
+            p1 = p;
+            min_dis1 = cmp_dis1;
+        }
+        if (cmp_dis2 < min_dis2){
+            p2 = p;
+            min_dis2 = cmp_dis2;
+        }
+    }
+    return angle(seg, {p1, p2});
+}
+
 double angle(const Segment &seg1, const Segment &seg2) {
     auto x1 = seg1.point2.x - seg1.point1.x;
     auto y1 = seg1.point2.y - seg1.point1.y;
@@ -141,6 +158,7 @@ double angle(const Segment &seg1, const Segment &seg2) {
     auto cal_angle = atan2(det, dot);
     return abs(cal_angle);
 }
+
 
 bool overlap(const BBox &bbox1, const BBox &bbox2) {
     double x_max_1 = std::max(bbox1.first.x, bbox1.second.x);
@@ -196,7 +214,12 @@ Points thick(const Points &points, double min_interval) {
     }
     Points res = {points[0]};
     for (int i = 1; i < points.size(); i++) {
-        int seg_num = int(cal_length({points[i - 1], points[i]}) / min_interval);
+        double interval_len = cal_length({points[i - 1], points[i]});
+        if (interval_len <= min_interval){
+            res.push_back(points[i]);
+            continue;
+        }
+        int seg_num = int(interval_len / min_interval);
         double move_x = (points[i].x - points[i - 1].x) / seg_num, move_y = (points[i].y - points[i - 1].y) / seg_num;
         for (int j = 1; j <= seg_num; j++) {
             Point point = Point(points[i - 1].id + "-" + std::to_string(j + 2),
@@ -309,7 +332,7 @@ bool in_polygon(const Points &polygon, const Point &point) {
 
 int num_in_in_polygon(const Points &polygon, const Line &line) {
     int n_in = 0;
-    for (auto const p: line.points) {
+    for (auto const& p: line.points) {
         if (in_polygon(polygon, p)) {
             n_in += 1;
         }

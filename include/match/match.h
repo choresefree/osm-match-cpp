@@ -20,6 +20,12 @@ struct Score {
     double score;
 };
 
+struct ViterbiT {
+    std::string way_id;
+    osm::WayIDList tracing;
+    double score;
+};
+
 typedef std::vector<Score> Scores;
 
 typedef std::vector<Scores> ScoreMatrix;
@@ -29,6 +35,9 @@ namespace match {
     public:
         Match();
 
+        osm::WayIDList match(const std::string &track_file_path, const std::string &map_file_path = "");
+
+    private:
         bool load_track_from_json(const std::string &file_path);
 
         bool load_map_from_osm(const std::string &file_path);
@@ -46,12 +55,11 @@ namespace match {
         void viterbi();
 
         std::vector<Lines> observation;
-
         osm::Map osm_map;
-
+        double min_lon = INFINITY, min_lat = INFINITY, max_lon = 0, max_lat = 0;
         Segments track;
-    private:
         RTree<Line, double, DIM, double> rtree;
+        osm::WayIDList match_result;
     };
 }
 
