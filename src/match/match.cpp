@@ -166,23 +166,17 @@ ScoreMatrix match::Match::cal_score() {
             }
 //            printf("way id:%s, angle:%f, angle score:%f, distance score:%f\n",
 //                   line.id.c_str(), cur_angle, angle_score, distance_score);
-            if (line.id == "829097340") {
-                printf("way id:%s, angle:%f, angle score:%f, distance score:%f\n",
-                       line.id.c_str(), cur_angle, angle_score, distance_score);
-            }
             Score cur_way_score = Score{line.id, 0.5 * angle_score + 0.5 * distance_score};
             scores.push_back(cur_way_score);
         }
         score_matrix.push_back(scores);
     }
-    for (const auto &matrix: score_matrix) {
-        for (const auto &s: matrix) {
-            printf("way id:%s, score: %f |", s.way_id.c_str(), s.score);
-        }
-        printf("\n");
-    }
-
-
+//    for (const auto &matrix: score_matrix) {
+//        for (const auto &s: matrix) {
+//            printf("way id:%s, score: %f |", s.way_id.c_str(), s.score);
+//        }
+//        printf("\n");
+//    }
     return score_matrix;
 }
 

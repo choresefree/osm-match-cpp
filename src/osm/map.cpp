@@ -134,8 +134,8 @@ bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
         return false;
     }
     this->load_from_osm(OSM_CACHE_DIR + "http.osm", only_highway);
+    remove((OSM_CACHE_DIR + "http.osm").c_str());
     return true;
-//    remove((OSM_CACHE_DIR + "http.osm").c_str());
 }
 
 void osm::Map::dump_to_xml(const std::string &file_path) const {
