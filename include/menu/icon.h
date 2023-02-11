@@ -9,7 +9,9 @@
 #ifndef CUPID_ICON_H
 #define CUPID_ICON_H
 
-const char *ICON =
+#include <string>
+
+const std::string ICON =
         "$$$$$$$$$$$$$$$$$$$$$=+-.*$$$$$#####$$$$$$$$$$$$$$\n"
         "$$$$$$$$$$$$$$$$$$$$#*+..*$$$=+===***=****$$$$$$$$\n"
         "$$$$$$$$$$$$$$$$=+.-+===+*=-.      .. -==*=+#$$$$$\n"

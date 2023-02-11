@@ -20,7 +20,7 @@ namespace osm {
     public:
         Map();
 
-        void init_map(const WayMap &ways, NodeMap nodes, bool only_highway);
+        void build_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway);
 
         void dump_to_xml(const std::string &file_path) const;
 

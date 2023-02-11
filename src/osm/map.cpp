@@ -12,7 +12,7 @@
 #include "http/httplib.h"
 #include "common/common.h"
 
-const char *DOWNLOAD_OSM_PATH = "/api/map?bbox=%f,%f,%f,%f";
+const std::string DOWNLOAD_OSM_PATH = "/api/map?bbox=";
 const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
 const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
 
@@ -32,7 +32,7 @@ osm::WayList osm::Map::get_ways() const {
     return res;
 }
 
-void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
+void osm::Map::build_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
     for (auto way: input_ways) {
         bool high_way = true;
         if (way.second.tags.find("highway") == way.second.tags.end()) {
@@ -44,7 +44,7 @@ void osm::Map::init_map(const WayMap &input_ways, NodeMap input_nodes, bool only
         NodeIDList cur_way_node_ids;
         for (const auto &node_id: way.second.get_node_ids()) {
             if (input_nodes.find(node_id) == input_nodes.end()) {
-                printf("node%s in way%s does not exist in input nodes\n", node_id.c_str(), way.first.c_str());
+                printf("node%s in way%s does not exist in input input_nodes\n", node_id.c_str(), way.first.c_str());
                 continue;
             }
             cur_way_node_ids.push_back(node_id);
@@ -104,19 +104,18 @@ bool osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
         Way map_way = Way(way_id, map_way_node_ids, map_way_tags);
         map_ways[way_id] = map_way;
     }
-    this->init_map(map_ways, map_nodes, only_highway);
+    this->build_map(map_ways, map_nodes, only_highway);
     return true;
 }
 
 bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
-    char *path = new char[0];
-    sprintf(path, DOWNLOAD_OSM_PATH, min_lon, min_lat, max_lon, max_lat);
-    printf("down load osm from %s%s\n", DOWNLOAD_OSM_URL.c_str(), path);
-    const std::string path_string = path;
+    std::string path = DOWNLOAD_OSM_PATH + std::to_string(min_lon) + "," + std::to_string(min_lat) + ","
+            + std::to_string(max_lon) + "," + std::to_string(max_lat);
+    printf("download osm from %s  %s\n", DOWNLOAD_OSM_URL.c_str(), path.c_str());
     httplib::Client cli(DOWNLOAD_OSM_URL);
     cli.set_connection_timeout(60  *5);
-    cli.set_read_timeout(60  *5);
-    if (auto res = cli.Get(path_string)) {
+    cli.set_read_timeout(60 * 5);
+    if (auto res = cli.Get(path)) {
         if (res->status == 200) {
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
         } else {

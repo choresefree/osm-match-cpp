@@ -21,7 +21,7 @@ The JsonCpp Authors, and is released under the terms of the MIT License (see bel
 In jurisdictions which recognize Public Domain property, the user of this
 software may choose to accept it either as 1) Public Domain, 2) under the
 conditions of the MIT License (see below), or 3) under the terms of dual
-Public Domain/MIT License conditions described here, as they choose.
+Public Domain/MIT License conditions described here, as they input_choice.
 
 The MIT License is about as close to Public Domain as a license can get, and is
 described in clear, concise terms at:
