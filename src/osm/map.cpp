@@ -14,7 +14,7 @@
 
 const std::string DOWNLOAD_OSM_PATH = "/api/map?bbox=";
 const std::string DOWNLOAD_OSM_URL = "http://overpass-api.de";
-const std::string OSM_CACHE_DIR = "/Users/xiezhenyu/GithubProjects/cupid/test/resource/";
+const std::string OSM_CACHE_DIR = "./cache";
 
 osm::NodeList osm::Map::get_nodes() const {
     NodeList res;
