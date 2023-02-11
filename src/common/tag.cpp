@@ -28,3 +28,10 @@ int Object::set_tag(const std::string& key, const std::string& value) {
         return 0;
     }
 }
+
+bool Object::exist_tag(const std::string &key) {
+    if (this->tags.find(key) == this->tags.end()){
+        return false;
+    }
+    return true;
+}

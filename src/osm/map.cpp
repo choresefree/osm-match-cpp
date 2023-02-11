@@ -35,7 +35,13 @@ osm::WayList osm::Map::get_ways() const {
 void osm::Map::build_map(const WayMap &input_ways, NodeMap input_nodes, bool only_highway = true) {
     for (auto way: input_ways) {
         bool high_way = true;
-        if (way.second.tags.find("highway") == way.second.tags.end()) {
+        if (way.second.exist_tag("building")) {
+            continue;
+        }
+        if (way.second.exist_tag("landuse")) {
+            continue;
+        }
+        if (way.second.exist_tag("highway")) {
             high_way = false;
         }
         if (only_highway && !high_way) {
@@ -110,10 +116,10 @@ bool osm::Map::load_from_osm(const std::string &file_path, bool only_highway) {
 
 bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, double max_lat, bool only_highway) {
     std::string path = DOWNLOAD_OSM_PATH + std::to_string(min_lon) + "," + std::to_string(min_lat) + ","
-            + std::to_string(max_lon) + "," + std::to_string(max_lat);
+                       + std::to_string(max_lon) + "," + std::to_string(max_lat);
     printf("download osm from %s  %s\n", DOWNLOAD_OSM_URL.c_str(), path.c_str());
     httplib::Client cli(DOWNLOAD_OSM_URL);
-    cli.set_connection_timeout(60  *5);
+    cli.set_connection_timeout(60 * 5);
     cli.set_read_timeout(60 * 5);
     if (auto res = cli.Get(path)) {
         if (res->status == 200) {

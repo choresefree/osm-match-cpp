@@ -23,7 +23,6 @@ namespace osm {
         NodeIDList get_node_ids() const;
 
         std::string id;
-        Tags tags;
 
     private:
         NodeIDList node_ids;
