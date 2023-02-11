@@ -40,8 +40,6 @@ namespace match {
     private:
         bool load_track_from_json(const std::string &file_path);
 
-        bool load_map_from_osm(const std::string &file_path);
-
         void print_track();
 
         void geography2geometry();

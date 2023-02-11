@@ -24,7 +24,6 @@ namespace osm {
 
         std::string id;
         Coordinate coord;
-        Tags tags;
     };
 
     typedef std::vector<std::string> NodeIDList;

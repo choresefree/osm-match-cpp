@@ -18,6 +18,7 @@ class Object {
 public:
     Tags get_tags() const;
     std::string get_tag(const std::string& key);
+    bool exist_tag(const std::string& key);
     int set_tag(const std::string& key, const std::string& value);
 
 
