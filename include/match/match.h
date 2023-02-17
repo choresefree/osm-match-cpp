@@ -37,6 +37,8 @@ namespace match {
 
         osm::WayIDList match(const std::string &track_file_path, const std::string &map_file_path = "");
 
+        void dump_result(const std::string& save_path);
+
     private:
         bool load_track_from_json(const std::string &file_path);
 

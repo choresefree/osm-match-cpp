@@ -40,6 +40,8 @@ namespace osm {
 
         std::string add_way(const NodeIDList &node_ids, const Tags &tags);
 
+        std::string add_way(const NodeList &input_nodes, const Tags &tags);
+
         WayMap find_node_parents(const std::string &node_id);
 
         WayList get_ways() const;

@@ -254,3 +254,20 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
     return this->match_result;
 }
 
+void match::Match::dump_result(const std::string& save_path) {
+    osm::Map res;
+    for (const auto& way_id : this->match_result){
+        osm::NodeIDList cur_way_node_ids;
+        auto cur_way = this->osm_map.get_way_by_id(way_id);
+        for (const auto& node_id : cur_way.get_node_ids()){
+            auto cur_node = this->osm_map.get_node_by_id(node_id);
+            auto add_node_id = res.add_node(cur_node);
+            cur_way_node_ids.push_back(add_node_id);
+        }
+        auto tags = cur_way.get_tags();
+        tags["way_id"] = way_id;
+        res.add_way(cur_way_node_ids, tags);
+    }
+    res.dump_to_xml(save_path);
+}
+

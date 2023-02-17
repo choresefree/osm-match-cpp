@@ -17,10 +17,10 @@ int main() {
 //    match.geography2geometry();
 //    match.observe();
 //    auto match_result = match.viterbi();
-    auto match_result = match.match("/Users/xiezhenyu/GithubProjects/cupid/test/resource/Taxi_2034_270_295.json",
-                                    "/Users/xiezhenyu/GithubProjects/cupid/test/resource/http.osm");
+    auto match_result = match.match("/Users/xiezhenyu/GithubProjects/cupid/resource/Taxi_2034_270_295.json");
     for (const auto& way_id: match_result){
         printf("%s ", way_id.c_str());
     }
+    match.dump_result("/Users/xiezhenyu/GithubProjects/cupid/resource/res.osm");
     return 0;
 }
