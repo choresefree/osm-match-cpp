@@ -232,6 +232,16 @@ std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const Tags &tags)
     return add_way.id;
 }
 
+std::string osm::Map::add_way(const osm::NodeList &input_nodes, const Tags &tags) {
+    NodeIDList node_ids;
+    for (const auto& node : input_nodes){
+        this->add_node(node);
+        node_ids.push_back(node.id);
+    }
+    return this->add_way(node_ids, tags);
+}
+
+
 bool osm::Map::connect(const std::string &way_id1, const std::string &way_id2) {
     Way way1 = this->get_way_by_id(way_id1);
     Way way2 = this->get_way_by_id(way_id2);
