@@ -164,12 +164,13 @@ ScoreMatrix match::Match::cal_score() {
             if (distance_score == 0 && angle_score == 0) {
                 continue;
             }
-//            printf("way id:%s, angle:%f, angle score:%f, distance score:%f\n",
-//                   line.id.c_str(), cur_angle, angle_score, distance_score);
             Score cur_way_score = Score{line.id, 0.5 * angle_score + 0.5 * distance_score};
+//            printf("way id:%s, angle:%f, angle score:%f, distance:%f, distance score:%f %f\n",
+//                   line.id.c_str(), cur_angle, angle_score, cur_distance, distance_score, cur_way_score.score);
             scores.push_back(cur_way_score);
         }
         score_matrix.push_back(scores);
+//        printf("-------------------\n");
     }
 //    for (const auto &matrix: score_matrix) {
 //        for (const auto &s: matrix) {
@@ -200,12 +201,11 @@ void match::Match::viterbi() {
         for (const auto &ob_score: scores[i]) {
             ViterbiT t = ViterbiT{ob_score.way_id, {}, 0};
             for (const auto &pre: preT) {
-                double trans_prob = 0.2;
-                if (this->osm_map.connect(ob_score.way_id, pre.way_id)) {
-                    trans_prob = 0.8;
+                double trans_prob = 0.1;
+                if (this->osm_map.connect(pre.way_id, ob_score.way_id)) {
+                    trans_prob = 1;
                 }
                 double cur_score = pre.score * trans_prob * ob_score.score;
-//                printf("\n%f", cur_score);
                 if (cur_score > t.score) {
                     auto tracing = pre.tracing;
                     tracing.push_back(ob_score.way_id);
@@ -218,13 +218,19 @@ void match::Match::viterbi() {
         }
         preT = curT;
         // in case the score is too small due to tiredness, avoid multiplying all by 10
-        if (min_score <= 0.0001) {
-            for (auto &t: preT) {
-                t.score *= 10;
-            }
-        }
+//        if (min_score <= 0.0001) {
+//            for (auto &t: preT) {
+//                t.score *= 10;
+//            }
+//        }
     }
     sort(curT.begin(), curT.end(), viterbi_cmp);
+//    for (const auto& t:curT){
+//        for (const auto& way_id : t.tracing){
+//            printf("%s ", way_id.c_str());
+//        }
+//        printf("%f\n", t.score);
+//    }
     for (const auto &w: curT[0].tracing) {
         if (this->match_result.empty() || w != this->match_result[this->match_result.size() - 1]) {
             this->match_result.push_back(w);
@@ -248,18 +254,19 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
             return this->match_result;
         }
     }
+//    this->osm_map.interrupt_branches();
     this->geography2geometry();
     this->observe();
     this->viterbi();
     return this->match_result;
 }
 
-void match::Match::dump_result(const std::string& save_path) {
+void match::Match::dump_result(const std::string &save_path) {
     osm::Map res;
-    for (const auto& way_id : this->match_result){
+    for (const auto &way_id: this->match_result) {
         osm::NodeIDList cur_way_node_ids;
         auto cur_way = this->osm_map.get_way_by_id(way_id);
-        for (const auto& node_id : cur_way.get_node_ids()){
+        for (const auto &node_id: cur_way.get_node_ids()) {
             auto cur_node = this->osm_map.get_node_by_id(node_id);
             auto add_node_id = res.add_node(cur_node);
             cur_way_node_ids.push_back(add_node_id);

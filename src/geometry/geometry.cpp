@@ -132,19 +132,7 @@ double distance(const Point &point, const Line &line) {
 }
 
 double angle(const Segment &seg, const Line &line) {
-    double min_dis1 = INFINITY, min_dis2 = INFINITY;
     Point p1 = line.points[0], p2 = line.points[line.points.size()-1];
-    for (const auto& p : line.points){
-        double cmp_dis1 = distance(p1, p), cmp_dis2 = distance(p2, p);
-        if (cmp_dis1 < min_dis1){
-            p1 = p;
-            min_dis1 = cmp_dis1;
-        }
-        if (cmp_dis2 < min_dis2){
-            p2 = p;
-            min_dis2 = cmp_dis2;
-        }
-    }
     return angle(seg, {p1, p2});
 }
 

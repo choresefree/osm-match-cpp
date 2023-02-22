@@ -124,6 +124,7 @@ bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
     if (auto res = cli.Get(path)) {
         if (res->status == 200) {
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
+            dump_file(res->body, "/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
         } else {
             printf("http status exception: %d\n", res->status);
             return false;
@@ -234,7 +235,7 @@ std::string osm::Map::add_way(const osm::NodeIDList &node_ids, const Tags &tags)
 
 std::string osm::Map::add_way(const osm::NodeList &input_nodes, const Tags &tags) {
     NodeIDList node_ids;
-    for (const auto& node : input_nodes){
+    for (const auto &node: input_nodes) {
         this->add_node(node);
         node_ids.push_back(node.id);
     }
@@ -243,16 +244,49 @@ std::string osm::Map::add_way(const osm::NodeList &input_nodes, const Tags &tags
 
 
 bool osm::Map::connect(const std::string &way_id1, const std::string &way_id2) {
+    if (way_id1 == way_id2){
+        return true;
+    }
     Way way1 = this->get_way_by_id(way_id1);
     Way way2 = this->get_way_by_id(way_id2);
     NodeIDList way1_node_ids = way1.get_node_ids();
     NodeIDList way2_node_ids = way2.get_node_ids();
-    for (std::string &node_id1: way1_node_ids) {
-        for (std::string &node_id2: way2_node_ids) {
-            if (node_id1 == node_id2) {
-                return true;
+    if (way1_node_ids[way1_node_ids.size() - 1] == way2_node_ids[0]) {
+        return true;
+    }
+    return false;
+}
+
+
+void osm::Map::interrupt_branches() {
+    osm::WayMap interrupt_ways;
+    int interrupt_way_num = 1;
+    for (const auto &way: this->get_ways()) {
+        auto node_ids = way.get_node_ids();
+        osm::NodeIDList interrupt_node_ids;
+        interrupt_node_ids.push_back(node_ids[0]);
+        for (int i = 1; i < node_ids.size(); i++) {
+            int mid_num = 0;
+            for (const auto &parent_way_id: this->node_parents[node_ids[i]]) {
+                auto parent_way_node_ids = this->get_way_by_id(parent_way_id).get_node_ids();
+                if (node_ids[0] == parent_way_node_ids[0] ||
+                    node_ids[0] == parent_way_node_ids[parent_way_node_ids.size() - 1]) {
+                    continue;
+                } else {
+                    mid_num += 1;
+                }
+            }
+            interrupt_node_ids.push_back(node_ids[i]);
+            if (mid_num > 0 || i == node_ids.size() - 1) {
+                auto tags = way.tags;
+                tags["way_id"] = way.id;
+                std::string way_id = std::to_string(interrupt_way_num++);
+                auto interrupt_way = Way(way_id, interrupt_node_ids, tags);
+                interrupt_ways[way_id] = interrupt_way;
+                interrupt_node_ids.clear();
+                interrupt_node_ids.push_back(node_ids[i]);
             }
         }
     }
-    return false;
+    this->ways = interrupt_ways;
 }
