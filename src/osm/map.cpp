@@ -124,7 +124,6 @@ bool osm::Map::load_from_osm(double min_lon, double min_lat, double max_lon, dou
     if (auto res = cli.Get(path)) {
         if (res->status == 200) {
             dump_file(res->body, OSM_CACHE_DIR + "http.osm");
-            dump_file(res->body, "/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
         } else {
             printf("http status exception: %d\n", res->status);
             return false;
@@ -279,7 +278,7 @@ void osm::Map::interrupt_branches() {
             interrupt_node_ids.push_back(node_ids[i]);
             if (mid_num > 0 || i == node_ids.size() - 1) {
                 auto tags = way.tags;
-                tags["way_id"] = way.id;
+                tags["origin_way_id"] = way.id;
                 std::string way_id = std::to_string(interrupt_way_num++);
                 auto interrupt_way = Way(way_id, interrupt_node_ids, tags);
                 interrupt_ways[way_id] = interrupt_way;

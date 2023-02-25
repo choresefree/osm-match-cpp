@@ -17,7 +17,8 @@ int main() {
 //    match.geography2geometry();
 //    match.observe();
 //    auto match_result = match.viterbi();
-    auto match_result = match.match("/Users/xiezhenyu/PycharmProjects/competition/osm-match-sefree/worker/track.json", "/Users/xiezhenyu/PycharmProjects/competition/osm-match-sefree/worker/map.osm");
+    auto match_result = match.match(
+            "/Users/xiezhenyu/GithubProjects/cupid/resource/Taxi_2034_496_501.json");
     for (const auto& way_id: match_result){
         printf("%s ", way_id.c_str());
     }

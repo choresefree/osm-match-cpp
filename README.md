@@ -19,7 +19,10 @@
 
 ### 1、代码库说明
 
-#### 一个基于C++的路网匹配微系统。
+一个基于C++的路网匹配微系统
+
+#### 1.1、HMM和Viterbi算法
+![image](resource/img/observation.png)
 
 ### 2、内容更新
 

@@ -6,13 +6,12 @@
 * @Description: TODO
 */
 
-#include <iostream>
 #include "match/match.h"
 #include "json/json.h"
 #include "common/common.h"
 #include "geometry/transform.h"
 
-const double EXTEND_LEN = 25;
+const double EXTEND_LEN = 100;
 const double THICK_TRACK_INTERVAL = 100;
 
 bool match::Match::load_track_from_json(const std::string &file_path) {
@@ -232,8 +231,10 @@ void match::Match::viterbi() {
 //        printf("%f\n", t.score);
 //    }
     for (const auto &w: curT[0].tracing) {
-        if (this->match_result.empty() || w != this->match_result[this->match_result.size() - 1]) {
-            this->match_result.push_back(w);
+        auto interrupt_way = this->osm_map.get_way_by_id(w);
+        auto origin_way_id = interrupt_way.get_tag("origin_way_id");
+        if (this->match_result.empty() || origin_way_id != this->match_result[this->match_result.size() - 1]) {
+            this->match_result.push_back(origin_way_id);
         }
     }
 }
@@ -254,7 +255,8 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
             return this->match_result;
         }
     }
-//    this->osm_map.interrupt_branches();
+    this->osm_map.interrupt_branches();
+//    this->osm_map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/resource/interrupt_map.osm");
     this->geography2geometry();
     this->observe();
     this->viterbi();
