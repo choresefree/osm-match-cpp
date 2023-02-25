@@ -28,6 +28,13 @@
 
 #### 2023.02.18
     1、打断多连接，避免匹配到连接到的无效路
+打断前:
+![image](resource/img/update/20230218/1.png)
+打断后:
+![image](resource/img/update/20230218/2.png)
+记录原始骨架线ID:
+![image](resource/img/update/20230218/3.png)
+    
     2、重载了一个新的OSM工具增加路线的函数
 #### 2023.02.17
     1、实现匹配结果可视化，保存为OSM文件

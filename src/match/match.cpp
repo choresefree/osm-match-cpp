@@ -255,6 +255,7 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
             return this->match_result;
         }
     }
+//    this->osm_map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
     this->osm_map.interrupt_branches();
 //    this->osm_map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/resource/interrupt_map.osm");
     this->geography2geometry();
