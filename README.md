@@ -21,11 +21,13 @@
 
 一个基于C++的路网匹配微系统，算法参考：
 https://blog.csdn.net/weixin_30629977/article/details/98993506
-
+JSOM可视化工具下载方式：
+https://www.cnblogs.com/yibeimingyue/p/16571990.html
 #### 1.1、HMM
 ![image](resource/img/observation.png)
 https://zhuanlan.zhihu.com/p/88362664
 #### 1.2、Viterbi
+维特比算法是一种动态规划算法用于寻找最有可能产生观测事件序列的-维特比路径-隐含状态序列，特别是在马尔可夫信息源上下文和隐马尔可夫模型中。
 https://blog.csdn.net/athemeroy/article/details/79339546
 ### 2、内容更新
 
