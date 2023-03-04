@@ -21,7 +21,8 @@
 
 一个基于C++的路网匹配微系统，算法参考：
 https://blog.csdn.net/weixin_30629977/article/details/98993506
-
+JSOM可视化工具下载方式：
+https://www.cnblogs.com/yibeimingyue/p/16571990.html
 #### 1.1、HMM
 ![image](resource/img/observation.png)
 https://zhuanlan.zhihu.com/p/88362664
