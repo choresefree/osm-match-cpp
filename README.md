@@ -18,11 +18,11 @@
  ```
 
 ### 1、代码库说明
-
 一个基于C++的路网匹配微系统，算法参考：
 https://blog.csdn.net/weixin_30629977/article/details/98993506
 JSOM可视化工具下载方式：
 https://www.cnblogs.com/yibeimingyue/p/16571990.html
+
 #### 1.1、HMM
 ![image](resource/img/observation.png)
 https://zhuanlan.zhihu.com/p/88362664
@@ -32,7 +32,7 @@ https://blog.csdn.net/athemeroy/article/details/79339546
 ### 2、内容更新
 
 #### 2023.03.95
-    1、删除了默认打断，修复了因此引入的BUG
+    1、修复了打断引入的BUG
 #### 2023.02.18
     1、打断多连接，避免匹配到连接到的无效路
 打断前:

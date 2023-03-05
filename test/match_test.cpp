@@ -24,6 +24,7 @@ int main() {
         printf("%s ", way_id.c_str());
     }
 //    match.dump_map("/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
+//    match.dump_map("/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
     match.dump_track("/Users/xiezhenyu/GithubProjects/cupid/resource/track.osm");
     match.dump_result("/Users/xiezhenyu/GithubProjects/cupid/resource/res.osm");
     return 0;
