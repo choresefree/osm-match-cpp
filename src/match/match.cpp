@@ -163,7 +163,7 @@ ScoreMatrix match::Match::cal_score() {
             if (distance_score == 0 && angle_score == 0) {
                 continue;
             }
-            Score cur_way_score = Score{line.id, 0.5 * angle_score + 0.5 * distance_score};
+            Score cur_way_score = Score{line.id, 0.3 * angle_score + 0.7 * distance_score};
 //            printf("way id:%s, angle:%f, angle score:%f, distance:%f, distance score:%f %f\n",
 //                   line.id.c_str(), cur_angle, angle_score, cur_distance, distance_score, cur_way_score.score);
             scores.push_back(cur_way_score);
@@ -198,9 +198,9 @@ void match::Match::viterbi() {
         double denominator = 0;
         double min_score = INFINITY;
         for (const auto &ob_score: scores[i]) {
-            ViterbiT t = ViterbiT{ob_score.way_id, {}, 0};
+            ViterbiT t = ViterbiT{ob_score.way_id, {}, -1};
             for (const auto &pre: preT) {
-                double trans_prob = 0.1;
+                double trans_prob = 1e-1;
                 if (this->osm_map.connect(pre.way_id, ob_score.way_id)) {
                     trans_prob = 1;
                 }
@@ -217,11 +217,11 @@ void match::Match::viterbi() {
         }
         preT = curT;
         // in case the score is too small due to tiredness, avoid multiplying all by 10
-//        if (min_score <= 0.0001) {
-//            for (auto &t: preT) {
-//                t.score *= 10;
-//            }
-//        }
+        if (min_score <= 0.0001) {
+            for (auto &t: preT) {
+                t.score *= 10;
+            }
+        }
     }
     sort(curT.begin(), curT.end(), viterbi_cmp);
 //    for (const auto& t:curT){
@@ -231,10 +231,9 @@ void match::Match::viterbi() {
 //        printf("%f\n", t.score);
 //    }
     for (const auto &w: curT[0].tracing) {
-        auto interrupt_way = this->osm_map.get_way_by_id(w);
-        auto origin_way_id = interrupt_way.get_tag("origin_way_id");
-        if (this->match_result.empty() || origin_way_id != this->match_result[this->match_result.size() - 1]) {
-            this->match_result.push_back(origin_way_id);
+        auto way = this->osm_map.get_way_by_id(w);
+        if (this->match_result.empty() || way.id != this->match_result[this->match_result.size() - 1]) {
+            this->match_result.push_back(way.id);
         }
     }
 }
@@ -255,9 +254,8 @@ osm::WayIDList match::Match::match(const std::string &track_file_path, const std
             return this->match_result;
         }
     }
-//    this->osm_map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/resource/map.osm");
+    printf("load map map successfully\n");
     this->osm_map.interrupt_branches();
-//    this->osm_map.dump_to_xml("/Users/xiezhenyu/GithubProjects/cupid/resource/interrupt_map.osm");
     this->geography2geometry();
     this->observe();
     this->viterbi();
@@ -279,5 +277,34 @@ void match::Match::dump_result(const std::string &save_path) {
         res.add_way(cur_way_node_ids, tags);
     }
     res.dump_to_xml(save_path);
+}
+
+void match::Match::dump_map(const std::string &save_path) {
+    this->osm_map.dump_to_xml(save_path);
+}
+
+void match::Match::dump_track(const std::string &save_path) {
+    osm::Map track_osm = osm::Map();
+    osm::NodeIDList node_ids;
+    for (int i = 0; i < this->track.size(); i++) {
+        if (i == 0) {
+            auto coord1 = relative2coordinate(this->track[i].point1);
+            auto coord2 = relative2coordinate(this->track[i].point2);
+            auto node1 = osm::Node(std::to_string(i - 1), coord1.lon, coord1.lat);
+            auto node2 = osm::Node(std::to_string(i), coord2.lon, coord2.lat);
+            auto node_id1 = track_osm.add_node(node1);
+            auto node_id2 = track_osm.add_node(node2);
+            node_ids.push_back(node_id1);
+            node_ids.push_back(node_id2);
+        } else {
+            auto coord = relative2coordinate(this->track[i].point2);
+            auto node = osm::Node(std::to_string(i), coord.lon, coord.lat);
+            auto node_id = track_osm.add_node(node);
+            node_ids.push_back(node_id);
+        }
+    }
+    Tags tags;
+    track_osm.add_way(node_ids, tags);
+    track_osm.dump_to_xml(save_path);
 }
 
