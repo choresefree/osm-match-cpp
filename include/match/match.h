@@ -39,6 +39,10 @@ namespace match {
 
         void dump_result(const std::string& save_path);
 
+        void dump_map(const std::string& save_path);
+
+        void dump_track(const std::string& save_path);
+
     private:
         bool load_track_from_json(const std::string &file_path);
 
