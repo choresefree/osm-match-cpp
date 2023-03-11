@@ -232,8 +232,9 @@ void match::Match::viterbi() {
 //    }
     for (const auto &w: curT[0].tracing) {
         auto way = this->osm_map.get_way_by_id(w);
-        if (this->match_result.empty() || way.id != this->match_result[this->match_result.size() - 1]) {
-            this->match_result.push_back(way.id);
+        auto origin_way_id = way.get_tag("origin_way_id");
+        if (this->match_result.empty() || origin_way_id != this->match_result[this->match_result.size() - 1]) {
+            this->match_result.push_back(origin_way_id);
         }
     }
 }

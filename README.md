@@ -23,6 +23,50 @@ https://blog.csdn.net/weixin_30629977/article/details/98993506
 JSOM可视化工具下载方式：
 https://www.cnblogs.com/yibeimingyue/p/16571990.html
 
+使用方法，在线加载OSM底图：
+ ```cpp 
+auto match_result = match.match("track.json");
+for (const auto &way_id: match_result) {
+    printf("%s ", way_id.c_str());
+}
+ ```
+输入OSM底图：
+ ```cpp 
+auto match_result = match.match("track.json", "map.osm");
+for (const auto &way_id: match_result) {
+    printf("%s ", way_id.c_str());
+}
+ ```
+track.json：
+```json
+[
+    {
+        "lon": 121.5003,
+        "lat": 31.1351
+    },
+    {
+        "lon": 121.5176,
+        "lat": 31.1381
+    },
+    {
+        "lon": 121.5326,
+        "lat": 31.1395
+    },
+    {
+        "lon": 121.5288,
+        "lat": 31.1473
+    },
+    {
+        "lon": 121.5263,
+        "lat": 31.1515
+    },
+    {
+        "lon": 121.5213,
+        "lat": 31.1585
+    }
+]
+```
+
 #### 1.1、HMM
 ![image](resource/img/observation.png)
 https://zhuanlan.zhihu.com/p/88362664
